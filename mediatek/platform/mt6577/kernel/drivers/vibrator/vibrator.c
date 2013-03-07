@@ -16,7 +16,10 @@
 #include <linux/workqueue.h>
 
 #include "timed_output.h"
+<<<<<<< HEAD
 
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 #include <linux/hrtimer.h>
 #include <linux/err.h>
 #include <linux/platform_device.h>
@@ -25,8 +28,13 @@
 #include <linux/jiffies.h>
 #include <linux/timer.h>
 
+<<<<<<< HEAD
 #include <mach/mt_typedefs.h>
 //#include <mach/mt6577_pm_ldo.h>
+=======
+#include <mach/mt6577_typedefs.h>
+#include <mach/mt6577_pm_ldo.h>
+>>>>>>> ba0a338... Vibrator and camera fix
 
 #include <cust_vibrator.h>
 
@@ -130,15 +138,22 @@ static int vibrator_get_time(struct timed_output_dev *dev)
 
 static void vibrator_enable(struct timed_output_dev *dev, int value)
 {
+<<<<<<< HEAD
 		unsigned long flags;
 		
 		
+=======
+		unsigned long   flags;
+>>>>>>> ba0a338... Vibrator and camera fix
 #if 1
 		struct vibrator_hw* hw = get_cust_vibrator_hw(); 
 
 #endif
+<<<<<<< HEAD
 		printk("[vibrator]vibrator_enable: vibrator first in value = %d\n", value);
 
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 		spin_lock_irqsave(&vibe_lock, flags);
 		while(hrtimer_cancel(&vibe_timer))
                 {

@@ -475,12 +475,15 @@ void smschipEintEnable()
 	// register irp 
 	mt65xx_eint_set_sens(CUST_EINT_CMMB_NUM, CUST_EINT_EDGE_SENSITIVE);
 	mt65xx_eint_registration(CUST_EINT_CMMB_NUM, CUST_EINT_DEBOUNCE_DISABLE, CUST_EINT_POLARITY_HIGH, intHander, 0);         //1202
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_MT6575
 	mt65xx_eint_mask(CUST_EINT_CMMB_NUM);   
 	sms_info("[smsspiphy_init]CMMB GPIO EINT PIN mode: %d, dir:%d\n",mt_get_gpio_mode(GPIO_CMMB_EINT_PIN),
 			mt_get_gpio_dir(GPIO_CMMB_EINT_PIN));    
 
 #endif
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 	mt65xx_eint_unmask(CUST_EINT_CMMB_NUM);                        //enable eint
 
 	sms_info("CMMB GPIO EINT PIN mode: %d, dir:%d\n",mt_get_gpio_mode(GPIO_CMMB_EINT_PIN),

@@ -21,7 +21,10 @@
 #define __SMS_CARDS_H__
 
 #include <linux/usb.h>
+<<<<<<< HEAD
 #include <linux/module.h>
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 #include "smscoreapi.h"
 #include "smsir.h"
 

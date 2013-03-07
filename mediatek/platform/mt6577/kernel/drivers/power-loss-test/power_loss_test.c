@@ -11,7 +11,11 @@
 #include <asm/uaccess.h>
 
 #include "power_loss_test.h"
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> ba0a338... Vibrator and camera fix
 
 #define PWR_LOSS_MT6575      
 //#define PWR_LOSS_MT6573      
@@ -20,7 +24,10 @@
  * if not defined means to use hardware(ATE) 
  * reset */
 //#define PWR_LOSS_SW_RESET         
+<<<<<<< HEAD
 //#define PWR_LOSS_RANDOM_SW_RESET (1)
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 
 /* CONFIG_** macro will defined in linux .config file */
 #ifdef CONFIG_PWR_LOSS_MTK_DEBUG
@@ -39,7 +46,11 @@
 
 #ifdef PWR_LOSS_SW_RESET
     #ifdef PWR_LOSS_RANDOM_SW_RESET
+<<<<<<< HEAD
         #define PWR_LOSS_SLEEP_MAX_TIME      (4500)    
+=======
+        #define PWR_LOSS_SLEEP_MAX_TIME      (60*HZ)    //240second
+>>>>>>> ba0a338... Vibrator and camera fix
     #else
         #define PWR_LOSS_SLEEP_TIME          (6000)    //60second   
     #endif /* end of PWR_LOSS_RANDOM_SW_RESET */
@@ -120,7 +131,10 @@ int pwr_loss_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
     return 0;    
 }
 
+<<<<<<< HEAD
 extern void get_random_bytes(void *buf, int nbytes);
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 static struct file_operations pwr_loss_fops =
 {
     .owner = THIS_MODULE,
@@ -146,6 +160,7 @@ int pwr_loss_reset_thread(void *p)
     volatile unsigned short *Reg3 = (unsigned short *)PWR_LOSS_WDT_RESTART;
 #endif 
 
+<<<<<<< HEAD
     get_random_bytes(&sleep_time, sizeof(signed long));
     if (sleep_time < 0)
         sleep_time &= 0x7fffffff; 
@@ -155,6 +170,22 @@ int pwr_loss_reset_thread(void *p)
     printk("Power Loss Test: sleep time =%d\n", sleep_time);
 #endif
 
+=======
+    current_time = current_kernel_time();
+    sec_time = current_time.tv_sec;
+    nsec_time = current_time.tv_nsec;
+
+#ifdef PWR_LOSS_DEBUG
+    printk("Power Loss Test: current time Second=%d, nSecond=%d \n", sec_time, nsec_time);
+#endif
+
+    sleep_time = (sec_time + (nsec_time % 1000000) + ((nsec_time * 3) % 100000))
+                  % PWR_LOSS_SLEEP_MAX_TIME;
+
+#ifdef PWR_LOSS_DEBUG
+    printk("Power Loss Test: sleep time =%d\n", sleep_time);
+#endif
+>>>>>>> ba0a338... Vibrator and camera fix
     while (1){
         printk("Power Loss Test: wait for reset...!\n");
         set_current_state(TASK_UNINTERRUPTIBLE);

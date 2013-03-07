@@ -63,10 +63,15 @@ struct SMSDev_data {
 extern struct SMSDev_data* SMSDev;
 #endif  //MTK_SPI
 
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 static struct workqueue_struct *spi_thread_wq=NULL; 
 static struct work_struct spi_thread_work;
 #endif
+=======
+static struct workqueue_struct *spi_thread_wq=NULL; 
+static struct work_struct spi_thread_work;
+>>>>>>> ba0a338... Vibrator and camera fix
 
 #define SMS_INTR_PIN			16  /* 0 for nova sip, 26 for vega */
 #define TX_BUFFER_SIZE			0x200
@@ -107,12 +112,17 @@ struct _Msg {
 
 struct _spi_device_st *spi_dev;
 
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 static void spi_worker_thread(struct work_struct *work);
 #else
 static void spi_worker_thread(void *arg);
 static DECLARE_WORK(spi_work_queue, (void *)spi_worker_thread);
 #endif
+=======
+static void spi_worker_thread(struct work_struct *work);
+//static DECLARE_WORK(spi_work_queue, (void *)spi_worker_thread);
+>>>>>>> ba0a338... Vibrator and camera fix
 static u8 smsspi_preamble[] = { 0xa5, 0x5a, 0xe7, 0x7e };
 static u8 smsspi_startup[] = { 0, 0, 0xde, 0xc1, 0xa5, 0x51, 0xf1, 0xed };
 static u32 default_type = SMS_NOVA_B0;
@@ -126,11 +136,15 @@ module_param(intr_pin, int, 0644);
 MODULE_PARM_DESC(intr_pin, "interrupt pin number.");
 
 /******************************************/
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 static void spi_worker_thread(struct work_struct *work)
 #else
 static void spi_worker_thread(void *arg)
 #endif
+=======
+static void spi_worker_thread(struct work_struct *work)
+>>>>>>> ba0a338... Vibrator and camera fix
 {
 	struct _spi_device_st *spi_device = spi_dev;
 	struct _smsspi_txmsg *msg = NULL;
@@ -229,12 +243,18 @@ static void smsspi_int_handler(void )
 	//struct _spi_device_st *spi_device = (struct _spi_device_st *) context;
 //	PDEBUG("interrupt\n");
 //	sms_info("**Interrupt %d", intCount++);
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	queue_work(spi_thread_wq, &spi_thread_work);
 #else
 	PREPARE_WORK(&spi_work_queue, (void *)spi_worker_thread);    
 	schedule_work(&spi_work_queue);
 #endif
+=======
+//	PREPARE_WORK(&spi_work_queue, (void *)spi_worker_thread);    
+	//schedule_work(&spi_work_queue);
+	queue_work(spi_thread_wq, &spi_thread_work);
+>>>>>>> ba0a338... Vibrator and camera fix
 #ifdef MTK_SPI                                                      
 	 mt65xx_eint_unmask(CUST_EINT_CMMB_NUM);                  
 #endif
@@ -245,11 +265,16 @@ static int smsspi_queue_message_and_wait(struct _spi_device_st *spi_device,
 {
 	init_completion(&msg->completion);                       
 	list_add_tail(&msg->node, &spi_device->txqueue);
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	queue_work(spi_thread_wq, &spi_thread_work);
 #else
 	schedule_work(&spi_work_queue);
 #endif
+=======
+	//schedule_work(&spi_work_queue);
+	queue_work(spi_thread_wq, &spi_thread_work);
+>>>>>>> ba0a338... Vibrator and camera fix
 	wait_for_completion(&msg->completion);
 
 	return 0;
@@ -486,11 +511,19 @@ int smsspi_register(void)
 	struct _spi_dev_cb_st common_cb;
 
 	PDEBUG("entering \n");
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	sms_info("create a signelthread workqueue");
         spi_thread_wq = create_singlethread_workqueue("siano work wq");
 	INIT_WORK(&spi_thread_work, spi_worker_thread);
 #endif
+=======
+
+	sms_info("create a signelthread workqueue");
+        spi_thread_wq = create_singlethread_workqueue("siano work wq");
+	INIT_WORK(&spi_thread_work, spi_worker_thread);
+
+>>>>>>> ba0a338... Vibrator and camera fix
 	spi_device =
 	    kmalloc(sizeof(struct _spi_device_st), GFP_KERNEL);
 	spi_dev = spi_device;
@@ -621,9 +654,13 @@ void smsspi_unregister(void)
 #else
         kfree(spi_device->txbuf);
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	destroy_workqueue(spi_thread_wq);
 #endif
+=======
+	destroy_workqueue(spi_thread_wq);
+>>>>>>> ba0a338... Vibrator and camera fix
 	platform_device_unregister(&smsspi_device);
 	PDEBUG("exiting\n");
 }

@@ -414,7 +414,10 @@ int innodev_startup(inno_device_t* inno_dev)
 
 	inno_msg("!! startup innodev !!");
 
+<<<<<<< HEAD
 	INNO_SPI_GPIO_Set(1); 
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 	cust_cmmb_power_on();           // no need delay,according to innofidei doc,delay in reset function
 
 	ret =INNO_SPI_Init(1);
@@ -517,7 +520,10 @@ inno_dev->spi_driver->uninit();
 		// cut down if101 chip power supply
 		cust_cmmb_power_off();
 		//		ifUAMOpen = 0;
+<<<<<<< HEAD
 		INNO_SPI_GPIO_Set(0); 
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 	}
 
 	//up(&inno_dev->sem);
@@ -546,11 +552,15 @@ int innodev_init(void)                                    //create  workqueue an
 
 	INIT_WORK(&(irq_work), irq_work_handler);
 	// start irq thread
+<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	irq_wq = create_singlethread_workqueue("inno_irqtask");
 #else
 	irq_wq = create_workqueue("inno_irqtask");
 #endif
+=======
+	irq_wq = create_singlethread_workqueue("inno_irqtask");
+>>>>>>> ba0a338... Vibrator and camera fix
 
 	if(!irq_wq){
 		ret = -ENOMEM;

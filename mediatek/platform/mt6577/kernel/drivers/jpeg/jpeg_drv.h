@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Copyright Statement:
  *
  * This software/firmware and related documentation ("MediaTek Software") are
@@ -33,6 +34,8 @@
  * applicable license agreements with MediaTek Inc.
  */
 
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 /*****************************************************************************
 *  Copyright Statement:
 *  --------------------

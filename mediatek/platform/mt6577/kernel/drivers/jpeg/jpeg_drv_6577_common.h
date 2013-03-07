@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Copyright Statement:
  *
  * This software/firmware and related documentation ("MediaTek Software") are
@@ -33,6 +34,8 @@
  * applicable license agreements with MediaTek Inc.
  */
 
+=======
+>>>>>>> ba0a338... Vibrator and camera fix
 /*****************************************************************************
 *  Copyright Statement:
 *  --------------------
@@ -71,7 +74,11 @@
 #ifndef __JPEG_DRV_6577_COMMON_H__
 #define __JPEG_DRV_6577_COMMON_H__
 
+<<<<<<< HEAD
 #include <mach/mt_typedefs.h>
+=======
+#include <mach/mt6577_typedefs.h>
+>>>>>>> ba0a338... Vibrator and camera fix
 
 int jpeg_isr_enc_lisr(void);
 int jpeg_isr_dec_lisr(void);
