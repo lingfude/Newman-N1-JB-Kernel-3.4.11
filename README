@@ -1,0 +1,37 @@
+In order to get kernel compilation working, make sure you follow one of these steps:
+
+- You have 3 folders: kernel, mediatek and toolchain.
+  - kernel folder is the basic one, with the linux kernel sources.
+  - mediatek folder contains dependences that are necessary to build for MTK platform.
+  - toolchain folder contains appropiate cross-compiler.
+
+
+Option one:
+- In Terminal, cd to kernel folder.
+  There is a script called build.sh.
+  That is the interface you will use to build device kernel.
+
+- Run script with command "./build.sh newmann1" to begin with the build process.
+  Once finished, you will find the new zImage file in the kernel root folder (./kernelFile).
+
+- To perform a clean build run command "./build.sh clean newmann1".
+
+
+Option two:
+- Add toolchain cross-compiler to your path: "export PATH=$PATH:/path_to_your_toolchain/arm-linux-androideabi-4.6/bin/"
+
+- In Terminal, cd to kernel folder.
+
+- Run command "TARGET_PRODUCT=newmann1 MTK_ROOT_CUSTOM=../mediatek/custom/ make"
+  Once finished, you will find the new zImage file in your root folder (./kernel/arch/arm/boot/zImage).
+
+- cd to your root folder.
+
+- Patch the new zImage with command "./mediatek/build/tools/mkimage ./kernel/arch/arm/boot/zImage KERNEL > zImagePatched"
+
+- To perform a clean build run commad "TARGET_PRODUCT=newmann1 MTK_ROOT_CUSTOM=../mediatek/custom/ make clean"
+
+
+Common for both options:
+- Get original boot.img for device and unpack it.
+- Repack boot.img using original ramdisk from boot.img and the new generated kernel (kernelFile or zImagePatched).

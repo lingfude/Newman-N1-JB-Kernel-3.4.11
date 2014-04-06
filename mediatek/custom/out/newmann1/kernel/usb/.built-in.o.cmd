@@ -1,0 +1,1 @@
+cmd_mediatek/custom/out/newmann1/kernel/usb/built-in.o :=  ../toolchain/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ld.bfd -EL    -r -o mediatek/custom/out/newmann1/kernel/usb/built-in.o mediatek/custom/out/newmann1/kernel/usb/mtk_usb_custom.o 
