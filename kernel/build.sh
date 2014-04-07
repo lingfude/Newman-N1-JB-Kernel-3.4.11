@@ -183,3 +183,4 @@ ${mkimg} ${kernel_zimg} KERNEL > kernelFile
 
 echo "**** Successfully built kernel ****"
 echo "**** You can find it in kernel root folder: kernelFile ****"
+echo "**** Rename the kernelFile to zImage and repack with stock RamDisk ****"
