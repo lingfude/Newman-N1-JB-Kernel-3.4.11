@@ -1,3 +1,4 @@
+Jelly Bean (3.4.0) kernel source code for the Newman N1
 In order to get kernel compilation working, make sure you follow one of these steps:
 
 - You have 3 folders: kernel, mediatek and toolchain.
