@@ -19,7 +19,7 @@ typedef enum
 	Cust_CC_400MA  = 0xD,
 	Cust_CC_200MA  = 0xE,
 	Cust_CC_70MA   = 0xF,
-	Cust_CC_0MA	   = 0xDD
+	Cust_CC_0MA    = 0xDD
 }cust_charging_current_enum;
 
 typedef struct{	
@@ -36,12 +36,12 @@ typedef struct{
 #define RECHARGING_VOLTAGE      4110
 
 /* Charging Current Setting */
-#define CONFIG_USB_IF 						0   
-#define USB_CHARGER_CURRENT_SUSPEND			Cust_CC_0MA		// def CONFIG_USB_IF
+#define CONFIG_USB_IF 				0   
+#define USB_CHARGER_CURRENT_SUSPEND		Cust_CC_0MA	// def CONFIG_USB_IF
 #define USB_CHARGER_CURRENT_UNCONFIGURED	Cust_CC_70MA	// def CONFIG_USB_IF
 #define USB_CHARGER_CURRENT_CONFIGURED		Cust_CC_450MA	// def CONFIG_USB_IF
-#define USB_CHARGER_CURRENT					Cust_CC_450MA
-#define AC_CHARGER_CURRENT					Cust_CC_700MA	
+#define USB_CHARGER_CURRENT			Cust_CC_450MA
+#define AC_CHARGER_CURRENT			Cust_CC_700MA
 
 /* Battery Meter Solution */
 #define CONFIG_ADC_SOLUTION 	1
@@ -69,7 +69,7 @@ VBAT_TO_PERCENT Batt_VoltToPercent_Table[] = {
 /* Common setting */
 #define R_CURRENT_SENSE 2				// 0.2 Ohm
 #define R_BAT_SENSE 4					// times of voltage
-#define R_I_SENSE 4						// times of voltage
+#define R_I_SENSE 4					// times of voltage
 #define R_CHARGER_1 330
 #define R_CHARGER_2 39
 #define R_CHARGER_SENSE ((R_CHARGER_1+R_CHARGER_2)/R_CHARGER_2)	// times of voltage
@@ -80,14 +80,15 @@ VBAT_TO_PERCENT Batt_VoltToPercent_Table[] = {
 
 /* Teperature related setting */
 #define RBAT_PULL_UP_R             24000
-//#define RBAT_PULL_UP_VOLT          2500
+//#define RBAT_PULL_UP_VOLT        2500
 #define RBAT_PULL_UP_VOLT          1200
-//#define TBAT_OVER_CRITICAL_LOW     68237
-//#define TBAT_OVER_CRITICAL_LOW     483954
+//#define TBAT_OVER_CRITICAL_LOW   68237
+
+//#define TBAT_OVER_CRITICAL_LOW   483954
 #define TBAT_OVER_CRITICAL_LOW     70603
 #define BAT_TEMP_PROTECT_ENABLE    0
-#define BAT_NTC_10 1 //zhaoshaopeng define this 20120720 
-#define BAT_NTC_47 0
+#define BAT_NTC_10 		   1 //zhaoshaopeng define this 20120720 
+#define BAT_NTC_47 		   0
 //#define BAT_NTC_TSM_1 zhaoshaopeng undefine this for i8 20120720
 
 
