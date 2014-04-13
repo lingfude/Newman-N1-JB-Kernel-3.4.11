@@ -301,6 +301,7 @@ MTK_BICR_SUPPORT=yes
 # Define MTK branch(internal use only)
 MTK_BRANCH=MAIN2.1
 
+#DC Newman N1 end main features
 # Enable Brazil operator common requirements
 MTK_BRAZIL_CUSTOMIZATION=no
 
