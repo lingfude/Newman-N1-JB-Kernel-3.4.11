@@ -109,16 +109,10 @@
 #endif
 
 #include "musbfsh_core.h"
-<<<<<<< HEAD
 #include "musbfsh_host.h"
 #include "musbfsh_dma.h"
 #include "musbfsh_hsdma.h"
 #include "musbfsh_mt65xx.h"
-=======
-#include "musbfsh_hsdma.h"
-#include <mach/mt6577_pm_ldo.h>
-#include <mach/mt6577_gpio.h>
->>>>>>> ba0a338... Vibrator and camera fix
 
 extern irqreturn_t musbfsh_dma_controller_irq(int irq, void *private_data);
 
@@ -136,10 +130,6 @@ MODULE_DESCRIPTION(DRIVER_INFO);
 MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:" MUSBFSH_DRIVER_NAME);
-<<<<<<< HEAD
-=======
-#define MAXFIFOSIZE 1280+64
->>>>>>> ba0a338... Vibrator and camera fix
 
 struct wake_lock musbfsh_suspend_lock;
 
@@ -193,10 +183,6 @@ static inline struct musbfsh *dev_to_musbfsh(struct device *dev)
 void musbfsh_write_fifo(struct musbfsh_hw_ep *hw_ep, u16 len, const u8 *src)
 {
 	void __iomem *fifo = hw_ep->fifo;
-<<<<<<< HEAD
-=======
-    	int index;
->>>>>>> ba0a338... Vibrator and camera fix
 	prefetch((u8 *)src);
 
 	INFO("%cX ep%d fifo %p count %d buf %p\n",
@@ -432,7 +418,6 @@ static irqreturn_t musbfsh_stage0_irq(struct musbfsh *musbfsh, u8 int_usb,
 	}
 
 	if (int_usb & MUSBFSH_INTR_CONNECT) {
-<<<<<<< HEAD
 		struct usb_hcd *hcd = musbfsh_to_hcd(musbfsh);
 #ifndef MTK_DT_SUPPORT
 		wake_lock(&musbfsh_suspend_lock);
@@ -440,16 +425,6 @@ static irqreturn_t musbfsh_stage0_irq(struct musbfsh *musbfsh, u8 int_usb,
 
 		handled = IRQ_HANDLED;
 		musbfsh->is_active = 1;
-=======
-		// wake_lock(&musbfsh_suspend_lock);
-		struct usb_hcd *hcd = musbfsh_to_hcd(musbfsh);
-		void __iomem *mbase = musbfsh->mregs;
-
-		handled = IRQ_HANDLED;
-		musbfsh->is_active = 1;
-		set_bit(HCD_FLAG_SAW_IRQ, &hcd->flags);
-
->>>>>>> ba0a338... Vibrator and camera fix
 		musbfsh->ep0_stage = MUSBFSH_EP0_START;
 		musbfsh->port1_status &= ~(USB_PORT_STAT_LOW_SPEED
 					|USB_PORT_STAT_HIGH_SPEED
@@ -475,13 +450,9 @@ static irqreturn_t musbfsh_stage0_irq(struct musbfsh *musbfsh, u8 int_usb,
 		handled = IRQ_HANDLED;
 		usb_hcd_resume_root_hub(musbfsh_to_hcd(musbfsh));
 		musbfsh_root_disconnect(musbfsh);
-<<<<<<< HEAD
 #ifndef MTK_DT_SUPPORT
 		wake_unlock(&musbfsh_suspend_lock);
 #endif
-=======
-		// wake_unlock(&musbfsh_suspend_lock);
->>>>>>> ba0a338... Vibrator and camera fix
 	}
 
 	/* mentor saves a bit: bus reset and babble share the same irq.
@@ -510,7 +481,6 @@ static irqreturn_t musbfsh_stage0_irq(struct musbfsh *musbfsh, u8 int_usb,
 
 /*-------------------------------------------------------------------------*/
 
-<<<<<<< HEAD
 #if defined(MTK_DT_SUPPORT) && !defined(EVDO_DT_SUPPORT)
 #define USB_WAKE_TIME 5 //wx, seconds for hold wake lock and suspend schedule, please also check cdc-acm.c to sync, they should be the same
 static struct musbfsh *mtk_musbfsh;
@@ -557,8 +527,6 @@ out:
 }
 #endif
 
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 /*
 * Program the HDRC to start (enable interrupts, dma, etc.).
 */
@@ -566,12 +534,8 @@ void musbfsh_start(struct musbfsh *musbfsh)
 {
 	void __iomem	*regs = musbfsh->mregs;//base address of usb mac
 	u8		devctl = musbfsh_readb(regs, MUSBFSH_DEVCTL);
-<<<<<<< HEAD
 	u8		power = musbfsh_readb(regs, MUSBFSH_POWER);
 	int int_level1 = 0;
-=======
-    	u8		power = musbfsh_readb(regs, MUSBFSH_POWER);
->>>>>>> ba0a338... Vibrator and camera fix
 	WARNING("<== devctl 0x%02x\n", devctl);
 
 	/*  Set INT enable registers, enable interrupts */
@@ -580,11 +544,7 @@ void musbfsh_start(struct musbfsh *musbfsh)
 	musbfsh_writeb(regs, MUSBFSH_INTRUSBE, 0xf7);
 	/* enable level 1 interrupts */
 	musbfsh_writew(regs, USB11_L1INTM, 0x000f);
-<<<<<<< HEAD
 	int_level1 = musbfsh_readw(musbfsh->mregs, USB11_L1INTM);
-=======
-	int int_level1 = musbfsh_readw(musbfsh->mregs, USB11_L1INTM);
->>>>>>> ba0a338... Vibrator and camera fix
 	INFO("Level 1 Interrupt Mask 0x%x\n", int_level1);
 	int_level1 = musbfsh_readw(musbfsh->mregs, USB11_L1INTP);
 	INFO("Level 1 Interrupt Polarity 0x%x\n", int_level1);
@@ -612,12 +572,9 @@ void musbfsh_start(struct musbfsh *musbfsh)
 	
 	/* disable high speed negotiate */
 	power &= ~(MUSBFSH_POWER_HSENAB); // wx, not neccesary for USB11 host
-<<<<<<< HEAD
 	/* enable SUSPENDM, this will put PHY into low power mode, not so "low" as save current mode, 
 	    but it will be able to detect line state (remote wakeup/connect/disconnect) */
 	power |= MUSBFSH_POWER_ENSUSPEND;
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 	musbfsh_writeb(regs, MUSBFSH_POWER, power);
 	
 	devctl = musbfsh_readb(regs, MUSBFSH_DEVCTL);
@@ -625,7 +582,6 @@ void musbfsh_start(struct musbfsh *musbfsh)
 	INFO(" musb ready. devctl=0x%x, power=0x%x\n", devctl, power);
 	mdelay(500); // wx?
 
-<<<<<<< HEAD
 #if defined(MTK_DT_SUPPORT) && !defined(EVDO_DT_SUPPORT)
 	mtk_musbfsh = musbfsh;
 
@@ -636,10 +592,6 @@ void musbfsh_start(struct musbfsh *musbfsh)
 	mt65xx_eint_set_polarity(CUST_EINT_DT_EXT_MD_WK_UP_USB_NUM, CUST_EINT_DT_EXT_MD_WK_UP_USB_POLARITY);
 	mt65xx_eint_set_hw_debounce(CUST_EINT_DT_EXT_MD_WK_UP_USB_NUM, CUST_EINT_DT_EXT_MD_WK_UP_USB_DEBOUNCE_CN);
 	mt65xx_eint_registration(CUST_EINT_DT_EXT_MD_WK_UP_USB_NUM, CUST_EINT_DT_EXT_MD_WK_UP_USB_DEBOUNCE_EN, CUST_EINT_DT_EXT_MD_WK_UP_USB_POLARITY, remote_wakeup_irq, false);
-=======
-#ifdef MTK_DT_SUPPORT
-	mt_set_gpio_out(GPIO_52_USB_SW2, GPIO_OUT_ONE); // switch 6252's USB to 6577's USB1.1 port
->>>>>>> ba0a338... Vibrator and camera fix
 #endif
 }
 
@@ -704,21 +656,14 @@ static void musbfsh_shutdown(struct platform_device *pdev)
 
 
 /*-------------------------------------------------------------------------*/
-<<<<<<< HEAD
-=======
-
->>>>>>> ba0a338... Vibrator and camera fix
 /*
  * tables defining fifo_mode values.  define more if you like.
  * for host side, make sure both halves of ep1 are set up.
  */
 
 /* fits in 4KB */
-<<<<<<< HEAD
 #define MAXFIFOSIZE 1280
 
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 static struct musbfsh_fifo_cfg __initdata epx_cfg[] = {
 { .hw_ep_num =  1, .style = FIFO_TX,   .maxpacket = 64, .mode = BUF_SINGLE,},
 { .hw_ep_num =  1, .style = FIFO_RX,   .maxpacket = 64, .mode = BUF_SINGLE,},
@@ -731,14 +676,11 @@ static struct musbfsh_fifo_cfg __initdata epx_cfg[] = {
 { .hw_ep_num =  5, .style = FIFO_TX,   .maxpacket = 64, .mode = BUF_SINGLE,},
 };
 
-<<<<<<< HEAD
 static struct musbfsh_fifo_cfg __initdata ep0_cfg = {
 	.style = FIFO_RXTX, .maxpacket = 64,
 };
 /*-------------------------------------------------------------------------*/
 
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 /*
  * configure a fifo; for non-shared endpoints, this may be called
  * once for a tx fifo and once for an rx fifo.
@@ -776,11 +718,8 @@ fifo_setup(struct musbfsh *musbfsh, struct musbfsh_hw_ep  *hw_ep,
 	/* EP0 reserved endpoint for control, bidirectional;
 	 * EP1 reserved for bulk, two unidirection halves.
 	 */
-<<<<<<< HEAD
 	 if (hw_ep->epnum == 1)
 		musbfsh->bulk_ep = hw_ep;
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 	/* REVISIT error check:  be sure ep0 can both rx and tx ... */
 	switch (cfg->style) {
 	case FIFO_TX:
@@ -817,33 +756,18 @@ fifo_setup(struct musbfsh *musbfsh, struct musbfsh_hw_ep  *hw_ep,
 	return offset + (maxpacket << ((c_size & MUSBFSH_FIFOSZ_DPB) ? 1 : 0));
 }
 
-<<<<<<< HEAD
 static int __init ep_config_from_table(struct musbfsh *musbfsh)
 {
 	const struct musbfsh_fifo_cfg	*cfg = NULL;
 	unsigned		i = 0;
 	unsigned		n = 0;
-=======
-static struct musbfsh_fifo_cfg __initdata ep0_cfg = {
-	.style = FIFO_RXTX, .maxpacket = 64,
-};
-
-static int __init ep_config_from_table(struct musbfsh *musbfsh)
-{
-	const struct musbfsh_fifo_cfg	*cfg;
-	unsigned		i, n;
->>>>>>> ba0a338... Vibrator and camera fix
 	int			offset;
 	struct musbfsh_hw_ep	*hw_ep = musbfsh->endpoints;
 	INFO("musbfsh::ep_config_from_table++\r\n");
 	if (musbfsh->config->fifo_cfg) {
 		cfg = musbfsh->config->fifo_cfg;
 		n = musbfsh->config->fifo_cfg_size;
-<<<<<<< HEAD
 		INFO("musbfsh:fifo_cfg, n=%d\n",n);
-=======
-	INFO("musbfsh:fifo_cfg, n=%d\r\n",n);
->>>>>>> ba0a338... Vibrator and camera fix
 		goto done;
 	}
 
@@ -871,7 +795,6 @@ done:
 		epn++;//include ep0
 		musbfsh->nr_endpoints = max(epn, musbfsh->nr_endpoints);
 	}
-<<<<<<< HEAD
 	INFO("%s: %d/%d max ep, %d/%d memory\n",
 			musbfsh_driver_name,
 			n + 1, musbfsh->config->num_eps * 2 - 1,
@@ -881,14 +804,6 @@ done:
 		ERR("%s: missing bulk\n", musbfsh_driver_name);
 		return -EINVAL;
 	}
-=======
-    INFO("musbfsh->nr_endpoints=%d",musbfsh->nr_endpoints);
-	INFO( "%s: %d/%d max ep, %d/%d memory\n",
-			musbfsh_driver_name,
-			n + 1, musbfsh->config->num_eps * 2 - 1,
-			offset, MAXFIFOSIZE);
-
->>>>>>> ba0a338... Vibrator and camera fix
 	return 0;
 }
 
@@ -906,11 +821,7 @@ static int __init musbfsh_core_init(struct musbfsh *musbfsh)
 	musbfsh_configure_ep0(musbfsh);
 
 	/* discover endpoint configuration */
-<<<<<<< HEAD
 	musbfsh->nr_endpoints = 1;//will update in func: ep_config_from_table
-=======
-	musbfsh->nr_endpoints = 1;//will update in func: ep_config_from_table/hw
->>>>>>> ba0a338... Vibrator and camera fix
 	musbfsh->epmask = 1;
 	
 	status = ep_config_from_table(musbfsh);
@@ -949,21 +860,8 @@ static int __init musbfsh_core_init(struct musbfsh *musbfsh)
 }
 
 /*-------------------------------------------------------------------------*/
-<<<<<<< HEAD
 void musbfsh_read_clear_generic_interrupt(struct musbfsh *musbfsh)
 {
-=======
-
-static irqreturn_t generic_interrupt(int irq, void *__hci)
-{
-	unsigned long	flags;
-	irqreturn_t	retval = IRQ_NONE;
-	struct musbfsh	*musbfsh = __hci;
-	u16 int_level1 = 0;
-	INFO("musbfsh:generic_interrupt++\r\n");
-	spin_lock_irqsave(&musbfsh->lock, flags);
-
->>>>>>> ba0a338... Vibrator and camera fix
 	musbfsh->int_usb = musbfsh_readb(musbfsh->mregs, MUSBFSH_INTRUSB);
 	musbfsh->int_tx = musbfsh_readw(musbfsh->mregs, MUSBFSH_INTRTX);
 	musbfsh->int_rx = musbfsh_readw(musbfsh->mregs, MUSBFSH_INTRRX);
@@ -975,7 +873,6 @@ static irqreturn_t generic_interrupt(int irq, void *__hci)
 	musbfsh_writew(musbfsh->mregs, MUSBFSH_INTRRX, musbfsh->int_rx);
 	musbfsh_writeb(musbfsh->mregs, MUSBFSH_INTRUSB, musbfsh->int_usb);
 	musbfsh_writeb(musbfsh->mregs, MUSBFSH_HSDMA_INTR, musbfsh->int_dma);
-<<<<<<< HEAD
 }
 	
 static irqreturn_t generic_interrupt(int irq, void *__hci)
@@ -988,9 +885,6 @@ static irqreturn_t generic_interrupt(int irq, void *__hci)
 	spin_lock_irqsave(&musbfsh->lock, flags);
 
 	musbfsh_read_clear_generic_interrupt(musbfsh);	
-=======
-	
->>>>>>> ba0a338... Vibrator and camera fix
 	int_level1 = musbfsh_readw(musbfsh->mregs, USB11_L1INTS);
 	INFO("Level 1 Interrupt Status 0x%x\n", int_level1);
 	
@@ -1000,10 +894,6 @@ static irqreturn_t generic_interrupt(int irq, void *__hci)
 		retval = musbfsh_dma_controller_irq(irq, musbfsh->musbfsh_dma_controller);
 		
 	spin_unlock_irqrestore(&musbfsh->lock, flags);
-<<<<<<< HEAD
-=======
-
->>>>>>> ba0a338... Vibrator and camera fix
 	return retval;
 }
 
@@ -1073,11 +963,7 @@ irqreturn_t musbfsh_interrupt(struct musbfsh *musbfsh)
 
 
 #ifndef CONFIG_MUSBFSH_PIO_ONLY
-<<<<<<< HEAD
 static bool __initdata use_dma = 1;
-=======
-static int __initdata use_dma = 1;
->>>>>>> ba0a338... Vibrator and camera fix
 
 /* "modprobe ... use_dma=0" etc */
 module_param(use_dma, bool, 0);
@@ -1178,10 +1064,7 @@ musbfsh_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
 	int			status;
 	struct musbfsh		*musbfsh;
 	struct musbfsh_hdrc_platform_data *plat = dev->platform_data;
-<<<<<<< HEAD
 	struct usb_hcd	*hcd;
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 	INFO("musbfsh::musbfsh_init_controller++\r\n");
 	/* The driver might handle more features than the board; OK.
 	 * Fail when the board needs a feature that's not enabled.
@@ -1201,11 +1084,7 @@ musbfsh_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
 	spin_lock_init(&musbfsh->lock);
 	musbfsh->board_mode = plat->mode;
 	musbfsh->config->fifo_cfg = epx_cfg;
-<<<<<<< HEAD
 	musbfsh->config->fifo_cfg_size = sizeof(epx_cfg)/sizeof(struct musbfsh_fifo_cfg);
-=======
-	musbfsh->config->fifo_cfg_size = 9;
->>>>>>> ba0a338... Vibrator and camera fix
 	/* The musbfsh_platform_init() call:
 	 *   - adjusts musbfsh->mregs and musbfsh->isr if needed,
 	 *   - may initialize an integrated tranceiver
@@ -1276,11 +1155,7 @@ musbfsh_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
 	}
 
 	/* host side needs more setup */
-<<<<<<< HEAD
 	hcd = musbfsh_to_hcd(musbfsh);
-=======
-	struct usb_hcd	*hcd = musbfsh_to_hcd(musbfsh);
->>>>>>> ba0a338... Vibrator and camera fix
 	hcd->power_budget = 2 * (plat->power ?plat->power : 250);//plat->power can be set to 0,so the power is set to 500ma .
 
 	/* For the host-only role, we can activate right away.
@@ -1330,11 +1205,7 @@ static u64	*orig_dma_mask;
 static int __init musbfsh_probe(struct platform_device *pdev)
 {
 	struct device	*dev = &pdev->dev;
-<<<<<<< HEAD
 	int		irq = MT_USB1_IRQ_ID;
-=======
-	int		irq = MT6577_USB1_IRQ_ID;
->>>>>>> ba0a338... Vibrator and camera fix
 	int		status;
 	unsigned char __iomem	*base = (unsigned char __iomem*)USB11_BASE;
 	INFO("musbfsh_probe++\r\n");
@@ -1391,20 +1262,16 @@ static int musbfsh_suspend(struct device *dev)
 #if 1
 	spin_lock_irqsave(&musbfsh->lock, flags);
 	//musbfsh_set_vbus(musbfsh,0);//disable VBUS
-<<<<<<< HEAD
 #ifdef CONFIG_SMP
 	disable_irq(musbfsh->nIrq); // wx, clearn IRQ before closing clock. Prevent SMP issue: clock is disabled on CPU1, but ISR is running on CPU0 and failed to clear interrupt
 	musbfsh_read_clear_generic_interrupt(musbfsh);	
 #endif
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 	musbfsh_set_power(musbfsh, 0);
 	spin_unlock_irqrestore(&musbfsh->lock, flags);
 #endif
 	return 0;
 }
 
-<<<<<<< HEAD
 static int musbfsh_resume(struct device *dev)
 {
     //return 0;
@@ -1420,28 +1287,13 @@ static int musbfsh_resume(struct device *dev)
 	enable_irq(musbfsh->nIrq);
 #endif
 	spin_unlock_irqrestore(&musbfsh->lock, flags);
-=======
-static int musbfsh_resume_noirq(struct device *dev)
-{
-    //return 0;
-	struct platform_device *pdev = to_platform_device(dev);
-	struct musbfsh	*musbfsh = dev_to_musbfsh(&pdev->dev);
-    WARNING("musbfsh_resume_noirq++\r\n");
-#if 1
-	//musbfsh_set_vbus(musbfsh,1);//enable VBUS
-	musbfsh_set_power(musbfsh, 1);
->>>>>>> ba0a338... Vibrator and camera fix
 #endif
 	return 0;
 }
 
 static const struct dev_pm_ops musbfsh_dev_pm_ops = {
 	.suspend	= musbfsh_suspend,
-<<<<<<< HEAD
 	.resume	= musbfsh_resume,
-=======
-	.resume_noirq	= musbfsh_resume_noirq,
->>>>>>> ba0a338... Vibrator and camera fix
 };
 
 #define MUSBFSH_DEV_PM_OPS (&musbfsh_dev_pm_ops)

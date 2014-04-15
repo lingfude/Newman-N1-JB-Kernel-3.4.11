@@ -4,31 +4,17 @@
 #include <linux/platform_device.h>
 #include "musbfsh_core.h"
 #include "musbfsh_mt65xx.h"
-<<<<<<< HEAD
-=======
-#include <mach/mt6577_gpio.h>
-#include <mach/mt6577_clock_manager.h>
-#include <mach/mt6577_pm_ldo.h>
->>>>>>> ba0a338... Vibrator and camera fix
 
 // unsigned char __iomem *usb11_phy_addr = (unsigned char __iomem*)USB11_PHY_ADDR;
 
 void mt65xx_usb11_phy_poweron(void)
 {
-<<<<<<< HEAD
-=======
-    unsigned char reg_value = 0;
->>>>>>> ba0a338... Vibrator and camera fix
     INFO("mt65xx_usb11_phy_poweron++\r\n");
 	
     enable_pll(MT65XX_UPLL, "USB11");
 	udelay(100); // PHY power stable time	
 
-<<<<<<< HEAD
 	/* reverse preloader's sin @mt6575_usbphy.c */
-=======
-	/* reverse preloader's sin @mt6577_usbphy.c */
->>>>>>> ba0a338... Vibrator and camera fix
 	USB11PHY_CLR8(U1PHTCR2+3, force_usb11_avalid | force_usb11_bvalid | force_usb11_sessend | force_usb11_vbusvalid);
 	USB11PHY_CLR8(U1PHTCR2+2, RG_USB11_AVALID | RG_USB11_BVALID | RG_USB11_SESSEND | RG_USB11_VBUSVALID);
 	USB11PHY_CLR8(U1PHYCR1+2, force_usb11_en_fs_ls_rcv | force_usb11_en_fs_ls_tx);
@@ -45,10 +31,6 @@ void mt65xx_usb11_phy_poweron(void)
 
 void mt65xx_usb11_phy_savecurrent(void)
 {
-<<<<<<< HEAD
-=======
-    unsigned char reg_value = 0;
->>>>>>> ba0a338... Vibrator and camera fix
     INFO("mt65xx_usb11_phy_savecurrent++\r\n");
 
 	USB11PHY_SET8(U1PHTCR2+3, force_usb11_avalid | force_usb11_sessend | force_usb11_vbusvalid);
@@ -65,10 +47,6 @@ void mt65xx_usb11_phy_savecurrent(void)
 
 void mt65xx_usb11_phy_recover(void)
 {
-<<<<<<< HEAD
-=======
-    unsigned char reg_value = 0;
->>>>>>> ba0a338... Vibrator and camera fix
     INFO("mt65xx_usb11_phy_recover++\r\n");
 	
     enable_pll(MT65XX_UPLL, "USB11");
@@ -115,11 +93,7 @@ int mt65xx_usb11_poweron(int on){
     INFO("mt65xx_usb11_poweron++\r\n");
     if(on){
         if(oned) {
-<<<<<<< HEAD
             return 1; //already powered on
-=======
-            return; //already powered on
->>>>>>> ba0a338... Vibrator and camera fix
         } else{
             mt65xx_usb11_clock_enable (true);	            	
             if(!recover){
@@ -132,35 +106,21 @@ int mt65xx_usb11_poweron(int on){
         }
     } else{
         if(!oned) {
-<<<<<<< HEAD
             return 1; //already power off
-=======
-            return; //already power off
->>>>>>> ba0a338... Vibrator and camera fix
         } else{
             mt65xx_usb11_phy_savecurrent();
             mt65xx_usb11_clock_enable(false);
             oned = false;
         }
     }
-<<<<<<< HEAD
     return 0;
-=======
-    return;
->>>>>>> ba0a338... Vibrator and camera fix
 }
 
 void mt65xx_usb11_vbus(struct musbfsh *musbfsh, int is_on)
 {
-<<<<<<< HEAD
     INFO("mt65xx_usb11_vbus++,is_on=%d\r\n",is_on);
 #if 0
     static int oned = 0;  
-=======
-    static int oned = 0;
-    INFO("mt65xx_usb11_vbus++,is_on=%d\r\n",is_on);
-#if 0
->>>>>>> ba0a338... Vibrator and camera fix
     mt_set_gpio_mode(GPIO67,0);//should set GPIO_OTG_DRVVBUS_PIN as gpio mode. 
     mt_set_gpio_dir(GPIO67,GPIO_DIR_OUT);
     if(is_on){
@@ -170,12 +130,7 @@ void mt65xx_usb11_vbus(struct musbfsh *musbfsh, int is_on)
             mt_set_gpio_out(GPIO67,GPIO_OUT_ONE);
             oned = 1;
             }
-<<<<<<< HEAD
     } else {
-=======
-        }
-    else{
->>>>>>> ba0a338... Vibrator and camera fix
         if(!oned)
             return;
         else{

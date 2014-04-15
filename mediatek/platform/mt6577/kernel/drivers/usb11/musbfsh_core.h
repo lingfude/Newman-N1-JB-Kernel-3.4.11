@@ -61,18 +61,9 @@ struct musbfsh_ep;
 #define MUSBFSH_HWVERS_2000	0x800
 
 #include <linux/musbfsh.h>
-<<<<<<< HEAD
 #include "musbfsh_io.h"
 #include "musbfsh_regs.h"
 #include "musbfsh_debug.h"
-=======
-#include "musbfsh_dma.h"
-#include "musbfsh_io.h"
-#include "musbfsh_regs.h"
-#include "musbfsh_host.h"
-#include "musbfsh_debug.h"
-#include "musbfsh_mt65xx.h"
->>>>>>> ba0a338... Vibrator and camera fix
 
 /****************************** HOST ROLE ***********************************/
 
@@ -87,11 +78,7 @@ extern void musbfsh_host_rx(struct musbfsh *, u8);
 /****************************** CONSTANTS ********************************/
 
 #ifndef MUSBFSH_C_NUM_EPS
-<<<<<<< HEAD
 #define MUSBFSH_C_NUM_EPS ((u8)6)
-=======
-#define MUSBFSH_C_NUM_EPS ((u8)10)
->>>>>>> ba0a338... Vibrator and camera fix
 #endif
 
 #ifndef MUSBFSH_MAX_END0_PACKET
@@ -170,11 +157,7 @@ struct musbfsh {
 	 * queue until it completes or NAKs too much; then we try the next
 	 * endpoint.
 	 */
-<<<<<<< HEAD
 	struct musbfsh_hw_ep	*bulk_ep;
-=======
-	//struct musbfsh_hw_ep	*bulk_ep;
->>>>>>> ba0a338... Vibrator and camera fix
 	struct list_head	control;	/* of musbfsh_qh */
 	struct list_head	in_bulk;	/* of musbfsh_qh */
 	struct list_head	out_bulk;	/* of musbfsh_qh */

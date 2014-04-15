@@ -43,12 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cmmb_ming_app.h"       
 #endif
 
-<<<<<<< HEAD
 #include <mach/mt_gpio.h>
 #include <cust_gpio_usage.h>
-=======
-
->>>>>>> ba0a338... Vibrator and camera fix
 #include <cust_cmmb.h>
 #ifdef MTK_SPI                                                                      //xingyu add
 #include <linux/spi/spi.h>
@@ -93,7 +89,6 @@ static struct mutex g_smschar_pollwait_lock;
 #ifdef AUTO_CREATE_DEV
 struct class *SMSDev_class;
 #endif
-<<<<<<< HEAD
 
 static void cust_cmmb_spi_gpio_set(void)
 {
@@ -132,8 +127,6 @@ static void cust_cmmb_spi_gpio_reset(void)
 
 
 
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 /**
  * gets firmware filename from look-up table in case 
  * "request_firmware" is not supported by kernel.
@@ -635,10 +628,7 @@ static long smschar_ioctl(struct file *file,
        case SMSCHAR_DEVICE_POWER_ON:
 	 {
 	 	sms_info("SMSCHAR_DEVICE_POWER_ON\n");
-<<<<<<< HEAD
 		cust_cmmb_spi_gpio_set();
-=======
->>>>>>> ba0a338... Vibrator and camera fix
         	cust_cmmb_power_on();
 		smschipreset(NULL);
 		smschipEintEnable();
@@ -726,10 +716,7 @@ static long smschar_ioctl(struct file *file,
                  sms_info("SMSCHAR_DEVICE_POWER_OFF.\n");
 		   smschipEintDisable();
                  cust_cmmb_power_off();
-<<<<<<< HEAD
 			cust_cmmb_spi_gpio_reset();
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 	          return  smscore_reset_device_drvs(dev->coredev);
         }
 
@@ -915,15 +902,11 @@ static int SMSDev_resume(struct spi_device *spi)
 
 static struct spi_driver SMSDev_spi = {
 	.driver = {
-<<<<<<< HEAD
 //#ifdef CONFIG_ARCH_MT6577
 		.name =		"cmmb-spi",
 //#else
 //		.name =		"spidev",
 //#endif
-=======
-		.name =		"cmmb-spi",
->>>>>>> ba0a338... Vibrator and camera fix
 		.owner =	THIS_MODULE,
 	},
 	.probe   =	SMSDev_probe,

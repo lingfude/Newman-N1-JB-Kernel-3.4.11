@@ -15,10 +15,7 @@ INNO_RET INNO_SPI_Read_One_Byte_NoCS(unsigned char *data);
 INNO_RET INNO_SPI_Write_cmd_rsp(unsigned char cmd,unsigned char *rsp);
 INNO_RET INNO_SPI_Write_Bytes_NoCS(unsigned char *buffer, int len);
 
-<<<<<<< HEAD
 INNO_RET INNO_SPI_GPIO_Set(int enable); 
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 #define MTK_SPI
 #ifdef MTK_SPI
 #include <linux/init.h>

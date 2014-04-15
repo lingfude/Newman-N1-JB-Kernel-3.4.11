@@ -432,3 +432,4 @@ void mt_power_management_init(void)
     }
     #endif
 }
+

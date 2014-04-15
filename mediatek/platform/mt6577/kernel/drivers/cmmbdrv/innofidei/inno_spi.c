@@ -23,10 +23,7 @@
 #include <linux/err.h>
 #include <linux/delay.h>
 #include <linux/slab.h>
-<<<<<<< HEAD
 #include <mach/mt_gpio.h> 
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 
 #ifdef MTK_SPI                                //xingyu add
 #include <linux/spi/spi.h>
@@ -362,7 +359,6 @@ INNO_RET INNO_SPI_Read_Bytes_NoCS(unsigned char *buffer, int len)
 	}	  	
        return ret;
 }
-<<<<<<< HEAD
 
 /*
  * Set and Reset SPI GPIO pins 
@@ -419,5 +415,3 @@ INNO_RET INNO_SPI_GPIO_Set(int enable)
 	return INNO_NO_ERROR;
 	
 }
-=======
->>>>>>> ba0a338... Vibrator and camera fix

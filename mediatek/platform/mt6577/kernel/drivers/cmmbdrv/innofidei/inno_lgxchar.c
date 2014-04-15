@@ -1034,15 +1034,11 @@ static int INNODev_resume(struct spi_device *spi)
 
 static struct spi_driver INNODev_spi = {
 	.driver = {
-<<<<<<< HEAD
 #ifdef CONFIG_ARCH_MT6577
 		.name =		"cmmb-spi",                 //Siano --spidev
 #else
 		.name =		"spidev",                 //Siano --spidev
 #endif
-=======
-		.name =		"cmmb-spi",                 //Siano --spidev
->>>>>>> ba0a338... Vibrator and camera fix
 		.owner =	THIS_MODULE,
 	},
 	.probe   =	INNODev_probe,

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* Copyright Statement:
  *
  * This software/firmware and related documentation ("MediaTek Software") are
@@ -34,8 +33,6 @@
  * applicable license agreements with MediaTek Inc.
  */
 
-=======
->>>>>>> ba0a338... Vibrator and camera fix
 #include <linux/kernel.h>
 #include <linux/mm.h>
 #include <linux/mm_types.h>
@@ -66,17 +63,10 @@
 
 #include <mach/irqs.h>
 
-<<<<<<< HEAD
 #include <mach/mt_reg_base.h>
 #include <mach/mt_irq.h>
 #include <mach/irqs.h>
 #include <mach/mt_clock_manager.h>
-=======
-#include <mach/mt6577_reg_base.h>
-#include <mach/mt6577_irq.h>
-#include <mach/irqs.h>
-#include <mach/mt6577_clock_manager.h>
->>>>>>> ba0a338... Vibrator and camera fix
 
 #include "jpeg_drv.h"
 #include "jpeg_drv_6577_common.h"
@@ -85,7 +75,6 @@
 
 
 #define USE_SYSRAM
-<<<<<<< HEAD
 //#define JPEG_MSG(...)   xlog_printk(ANDROID_LOG_DEBUG, "xlog/jpeg", __VA_ARGS__)
 //#define JPEG_WRN(...)   xlog_printk(ANDROID_LOG_WARN,  "xlog/jpeg", __VA_ARGS__)
 //#define JPEG_ERR(...)   xlog_printk(ANDROID_LOG_ERROR, "xlog/jpeg", __VA_ARGS__)
@@ -94,12 +83,6 @@
 #define JPEG_ERR printk
 
 
-=======
-#define JPEG_MSG(...)   xlog_printk(ANDROID_LOG_DEBUG, "xlog/jpeg", __VA_ARGS__)
-#define JPEG_WRN(...)   xlog_printk(ANDROID_LOG_WARN,  "xlog/jpeg", __VA_ARGS__)
-#define JPEG_ERR(...)   xlog_printk(ANDROID_LOG_ERROR, "xlog/jpeg", __VA_ARGS__)
-//#define JPEG_MSG printk
->>>>>>> ba0a338... Vibrator and camera fix
 #define JPEG_DEVNAME "mtk_jpeg"
 
 #define TABLE_SIZE 4096
@@ -176,11 +159,7 @@ static irqreturn_t jpeg_drv_isr(int irq, void *dev_id)
     JPEG_MSG("JPEG Codec Interrupt\n");
     //jpeg_reg_dump();
     
-<<<<<<< HEAD
     if(irq == MT_JPEG_CODEC_IRQ_ID)
-=======
-    if(irq == MT6577_JPEG_CODEC_IRQ_ID)
->>>>>>> ba0a338... Vibrator and camera fix
     {   
         if(jpeg_isr_dec_lisr() == 0)
         {
@@ -340,11 +319,8 @@ static int jpeg_dec_ioctl(unsigned int cmd, unsigned long arg, struct file *file
 
     unsigned int *pStatus;
     unsigned int samplingFormat;
-<<<<<<< HEAD
     unsigned int check_dec_addr = 0;
     unsigned int check_end_addr = 0;	
-=======
->>>>>>> ba0a338... Vibrator and camera fix
     
     pStatus = (unsigned int*)file->private_data;
 
@@ -543,7 +519,6 @@ static int jpeg_dec_ioctl(unsigned int cmd, unsigned long arg, struct file *file
             }
 #endif
 
-<<<<<<< HEAD
 
 #if 1
             check_dec_addr = ioread32(JPG_CODEC_BASE + 0x00);
@@ -551,9 +526,6 @@ static int jpeg_dec_ioctl(unsigned int cmd, unsigned long arg, struct file *file
 #endif
 
             JPEG_MSG("Decode Result : %d, dec_addr %x, f_s %x!\n", decResult, check_dec_addr, check_end_addr);
-=======
-            JPEG_MSG("Decode Result : %d \n", decResult);
->>>>>>> ba0a338... Vibrator and camera fix
             if(decResult != 0)
             {
                 jpeg_reg_dump();
@@ -948,13 +920,8 @@ static int jpeg_probe(struct platform_device *pdev)
     init_waitqueue_head(&dec_wait_queue);
     init_waitqueue_head(&enc_wait_queue);
 
-<<<<<<< HEAD
     enable_irq(MT_JPEG_CODEC_IRQ_ID);
     if(request_irq(MT_JPEG_CODEC_IRQ_ID, jpeg_drv_isr, IRQF_TRIGGER_LOW, "jpeg_driver" , NULL))
-=======
-    enable_irq(MT6577_JPEG_CODEC_IRQ_ID);
-    if(request_irq(MT6577_JPEG_CODEC_IRQ_ID, jpeg_drv_isr, IRQF_TRIGGER_LOW, "jpeg_driver" , NULL))
->>>>>>> ba0a338... Vibrator and camera fix
     {
         JPEG_ERR("JPEG Codec Driver request irq failed\n");
     }
@@ -970,11 +937,7 @@ static int jpeg_remove(struct platform_device *pdev)
 	JPEG_MSG("JPEG Codec remove\n");
 	//unregister_chrdev(JPEGDEC_MAJOR, JPEGDEC_DEVNAME);
 #ifndef FPGA_VERSION
-<<<<<<< HEAD
 	free_irq(MT_JPEG_CODEC_IRQ_ID, NULL);
-=======
-	free_irq(MT6577_JPEG_CODEC_IRQ_ID, NULL);
->>>>>>> ba0a338... Vibrator and camera fix
 #endif
 	JPEG_MSG("Done\n");
 	return 0;
@@ -1073,9 +1036,5 @@ static void __exit jpeg_exit(void)
 module_init(jpeg_init);
 module_exit(jpeg_exit);
 MODULE_AUTHOR("Tzu-Meng, Chung <Tzu-Meng.Chung@mediatek.com>");
-<<<<<<< HEAD
 MODULE_DESCRIPTION("MT65XX JPEG Codec Driver");
-=======
-MODULE_DESCRIPTION("MT6573 JPEG Codec Driver");
->>>>>>> ba0a338... Vibrator and camera fix
 MODULE_LICENSE("GPL");

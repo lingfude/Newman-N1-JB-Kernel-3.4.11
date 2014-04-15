@@ -1,38 +1,36 @@
 /* Copyright Statement:
  *
  * This software/firmware and related documentation ("MediaTek Software") are
- * protected under relevant copyright laws. The information contained herein is
- * confidential and proprietary to MediaTek Inc. and/or its licensors. Without
- * the prior written permission of MediaTek inc. and/or its licensors, any
- * reproduction, modification, use or disclosure of MediaTek Software, and
- * information contained herein, in whole or in part, shall be strictly
- * prohibited.
- * 
- * MediaTek Inc. (C) 2010. All rights reserved.
- * 
+ * protected under relevant copyright laws. The information contained herein
+ * is confidential and proprietary to MediaTek Inc. and/or its licensors.
+ * Without the prior written permission of MediaTek inc. and/or its licensors,
+ * any reproduction, modification, use or disclosure of MediaTek Software,
+ * and information contained herein, in whole or in part, shall be strictly prohibited.
+ */
+/* MediaTek Inc. (C) 2010. All rights reserved.
+ *
  * BY OPENING THIS FILE, RECEIVER HEREBY UNEQUIVOCALLY ACKNOWLEDGES AND AGREES
  * THAT THE SOFTWARE/FIRMWARE AND ITS DOCUMENTATIONS ("MEDIATEK SOFTWARE")
- * RECEIVED FROM MEDIATEK AND/OR ITS REPRESENTATIVES ARE PROVIDED TO RECEIVER
- * ON AN "AS-IS" BASIS ONLY. MEDIATEK EXPRESSLY DISCLAIMS ANY AND ALL
- * WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
- * NONINFRINGEMENT. NEITHER DOES MEDIATEK PROVIDE ANY WARRANTY WHATSOEVER WITH
- * RESPECT TO THE SOFTWARE OF ANY THIRD PARTY WHICH MAY BE USED BY,
- * INCORPORATED IN, OR SUPPLIED WITH THE MEDIATEK SOFTWARE, AND RECEIVER AGREES
- * TO LOOK ONLY TO SUCH THIRD PARTY FOR ANY WARRANTY CLAIM RELATING THERETO.
- * RECEIVER EXPRESSLY ACKNOWLEDGES THAT IT IS RECEIVER'S SOLE RESPONSIBILITY TO
- * OBTAIN FROM ANY THIRD PARTY ALL PROPER LICENSES CONTAINED IN MEDIATEK
- * SOFTWARE. MEDIATEK SHALL ALSO NOT BE RESPONSIBLE FOR ANY MEDIATEK SOFTWARE
- * RELEASES MADE TO RECEIVER'S SPECIFICATION OR TO CONFORM TO A PARTICULAR
- * STANDARD OR OPEN FORUM. RECEIVER'S SOLE AND EXCLUSIVE REMEDY AND MEDIATEK'S
- * ENTIRE AND CUMULATIVE LIABILITY WITH RESPECT TO THE MEDIATEK SOFTWARE
- * RELEASED HEREUNDER WILL BE, AT MEDIATEK'S OPTION, TO REVISE OR REPLACE THE
- * MEDIATEK SOFTWARE AT ISSUE, OR REFUND ANY SOFTWARE LICENSE FEES OR SERVICE
- * CHARGE PAID BY RECEIVER TO MEDIATEK FOR SUCH MEDIATEK SOFTWARE AT ISSUE.
+ * RECEIVED FROM MEDIATEK AND/OR ITS REPRESENTATIVES ARE PROVIDED TO RECEIVER ON
+ * AN "AS-IS" BASIS ONLY. MEDIATEK EXPRESSLY DISCLAIMS ANY AND ALL WARRANTIES,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NONINFRINGEMENT.
+ * NEITHER DOES MEDIATEK PROVIDE ANY WARRANTY WHATSOEVER WITH RESPECT TO THE
+ * SOFTWARE OF ANY THIRD PARTY WHICH MAY BE USED BY, INCORPORATED IN, OR
+ * SUPPLIED WITH THE MEDIATEK SOFTWARE, AND RECEIVER AGREES TO LOOK ONLY TO SUCH
+ * THIRD PARTY FOR ANY WARRANTY CLAIM RELATING THERETO. RECEIVER EXPRESSLY ACKNOWLEDGES
+ * THAT IT IS RECEIVER'S SOLE RESPONSIBILITY TO OBTAIN FROM ANY THIRD PARTY ALL PROPER LICENSES
+ * CONTAINED IN MEDIATEK SOFTWARE. MEDIATEK SHALL ALSO NOT BE RESPONSIBLE FOR ANY MEDIATEK
+ * SOFTWARE RELEASES MADE TO RECEIVER'S SPECIFICATION OR TO CONFORM TO A PARTICULAR
+ * STANDARD OR OPEN FORUM. RECEIVER'S SOLE AND EXCLUSIVE REMEDY AND MEDIATEK'S ENTIRE AND
+ * CUMULATIVE LIABILITY WITH RESPECT TO THE MEDIATEK SOFTWARE RELEASED HEREUNDER WILL BE,
+ * AT MEDIATEK'S OPTION, TO REVISE OR REPLACE THE MEDIATEK SOFTWARE AT ISSUE,
+ * OR REFUND ANY SOFTWARE LICENSE FEES OR SERVICE CHARGE PAID BY RECEIVER TO
+ * MEDIATEK FOR SUCH MEDIATEK SOFTWARE AT ISSUE.
  *
- * The following software/firmware and/or related documentation ("MediaTek
- * Software") have been modified by MediaTek Inc. All revisions are subject to
- * any receiver's applicable license agreements with MediaTek Inc.
+ * The following software/firmware and/or related documentation ("MediaTek Software")
+ * have been modified by MediaTek Inc. All revisions are subject to any receiver's
+ * applicable license agreements with MediaTek Inc.
  */
 
 /*
@@ -109,6 +107,7 @@ typedef struct
 	MINT32 i4InfPos;					//Infiniti position
 	MBOOL  bIsMotorMoving;			//Motor Status
 	MBOOL  bIsMotorOpen;				//Motor Open?
+	MBOOL  bIsSupportSR;              // Slew Rate
 
 } FOCUS_INFO_T;
 
@@ -182,6 +181,101 @@ typedef struct
 
 } AF_DEBUG_INFO_T;
 
+
+#ifdef  MTK_ZSD_AF_ENHANCE
+
+typedef enum
+{
+    IDX = 0,	// search idx
+    POS,		// lens position
+    VLU,		// focus value
+    MINL,		// idx for min FV in inf side
+    MAX,		// idx for max FV
+    MINR,		// idx for min FV in macro side
+
+    FIN_3P, 	// finish: Peak found from 3 points
+    FIN_ICL,	// finish: Incline case
+    FIN_BND,	// finish: Full search case
+
+    BEST_POS,   // lens target position from curve fitting
+    FOCUS_POS,  // focused lens position
+
+    LV,         // light value
+    FAIL,       // can not find peak
+    FAIL_BND,   // can not find peak     (boundary)
+    MAIN_THRES, // main threshold percent
+    SUB_THRES,  // sub threshold percent
+    THRES_OFFSET,          // spot threshold offset
+    MATRIX_THRES_OFFSET,   // matrix threshold offset
+
+    THRES_VLU_MAIN,        // main threshold value
+    STATE,      // AF state
+    AFMODE,     // 1: AFS, 2: AFC, 3: Macro, 4: Inf, 5: MF, 6: Cal, 7: Fullscan
+    METER_MENU,    // 1: Spot, 2: Matrix
+    METER_REAL,    // real meter
+    WIN_L,    // AF window location  - left
+    WIN_R,    // AF window location  - right
+    WIN_U,    // AF window location  - up
+    WIN_B,    // AF window location  - bottom
+    
+    AFTIME,     // AF process time
+
+    FD_STATUS,  // 0: no face, 1: face detected
+
+    SCAN_START, // fullscan start position
+    SCAN_STEP,  // fullscan step interval
+    SCAN_NUM,
+    
+    STEP_L,
+    STEP_H,
+    
+    AF_AREA_PERCENT_W,
+    AF_AREA_PERCENT_H,
+
+	FOCUSED_IDX_NEAREST,
+    FOCUSED_IDX,
+    FOCUSED_IDX_FARTHEST,
+    DOF,
+    
+    VERSION,
+
+    ZOOM_W,
+	ZOOM_H,
+    ZOOM_WOS,
+    ZOOM_HOS,
+
+    FIRST_FV,
+    CHANGE_FV,
+    HW_TH,
+    FV_DC,
+    MIN_TH,
+    
+    ZSD,
+    ZSD_FIN_BND,
+    ZSD_FAIL,
+    ZSD_MONO_VLU,
+    AE_STABLE,
+    ISO,
+    GSUM,
+    XCURR,
+    ZCURR,
+    X0,
+    X1,
+    Z0,
+    Z1,
+    Y00,
+    Y01,
+    Y10,
+    Y11,
+    FIRST_GS,
+    CHANGE_GS,
+    
+    OVER_PATH_LENGTH
+
+} AF_DEBUG_TAG_T;
+
+#else
+
 typedef enum
 {
     IDX = 0,	// search idx
@@ -241,11 +335,18 @@ typedef enum
 	ZOOM_HEIGHT,
     ZOOM_WOFFSET,
     ZOOM_HOFFSET,
+
+    FIRST_FV,
+    CHANGE_FV,
+    HW_TH,
+    ZSD,
+    ZSD_FIN_BND,
+    ZSD_FAIL,
     
     OVER_PATH_LENGTH
 
 } AF_DEBUG_TAG_T;
-
+#endif
 
 #endif
 

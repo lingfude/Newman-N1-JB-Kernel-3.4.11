@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 #ifndef __MUSBFSH_MT65XX_H__
 #define __MUSBFSH_MT65XX_H__
@@ -20,13 +19,6 @@ extern void mt65xx_eint_registration(kal_uint8 eintno, kal_bool Dbounce_En,
 #endif
 
 //#define IC_USB
-=======
-#ifndef __MUSBFSH_MT65XX_H__
-#define __MUSBFSH_MT65XX_H__
-#include <mach/mt6577_reg_base.h>
-
-#define IC_USB
->>>>>>> ba0a338... Vibrator and camera fix
 
 //Level 1 interrupts:
 #define USB11_L1INTS 0xA0
