@@ -163,7 +163,7 @@ if [ ! -z $KMOD_PATH ]; then
   exit $?
 fi
 
-echo "**** Building ****"
+echo "**** Building kernel ****"
 make ${makeflags} ${makejobs} ${makedefs}
 
 if [ $? -ne 0 ]; then exit 1; fi
@@ -180,8 +180,23 @@ kernel_zimg="arch/arm/boot/zImage"
 if [ ! -x ${mkimg} ]; then chmod a+x ${mkimg}; fi
 
 ${mkimg} ${kernel_zimg} KERNEL > kernelFile
-
 echo "**** Successfully built kernel ****"
-echo "**** You can find it in kernel root folder: kernelFile ****"
-echo "**** Rename the kernelFile to zImage and repack with stock RamDisk ****"
 
+echo "**** Copying kernel to /build_result/kernel/ ****"
+mkdir -p ../build_result/kernel/
+cp kernelFile ../build_result/kernel/
+
+echo "**** Copying all built modules (.ko) to /build_result/modules/ ****"
+mkdir -p ../build_result/modules/
+for file in $(find ../ -name *.ko); do
+ cp $file ../build_result/modules/
+done
+
+echo "**** Patching all built modules (.ko) in /build_result/modules/ ****"
+cd ..
+find ./build_result/modules/ -type f -name '*.ko' | xargs -n 1 ./toolchain/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-strip --strip-unneeded
+echo "**** Finnish ****"
+
+echo "**** You can find kernelFile in root folder: /build_result/kernel/ ****"
+echo "**** You can find all modules in root folder: /build_result/modules/ ****"
+echo "**** Rename the kernelFile to zImage and repack with stock RamDisk ****"
