@@ -2904,7 +2904,7 @@ buffhds_first_it:
 		 /* Assume product name dependent on the first LUN */
 		 cfg->product_name ?: (common->luns->cdrom
 				     ? "File-Stor Gadget"
-				     : "File-CD Gadget"),
+				     : "Newman N1"),
 		 i);
 
 	/*

@@ -240,9 +240,9 @@ MVOID getHDRExpSetting(const HDRExpSettingInputParam_T& rInput, HDRExpSettingOut
     MUINT32 u4MaxHDRSensorGain = 4848; //Manually set, no larger than max gain in normal capture 
     MUINT32 u4TimeMode = 1; // 0:Depend on default AE parameters; 1: Manually set
     MUINT32 u4GainMode = 1; // 0:Depend on default AE parameters; 1: Manually set
-	double dfTargetTopEV =  1.5; // Target EV of long exposure image
+	double dfTargetTopEV =  2; // Target EV of long exposure image //1.5
 	double dfSafeTargetTopEV = 0.5; // Target EV of long exposure image
-	double dfTargetBottomEV = -2; // Target EV of short exposure image
+	double dfTargetBottomEV = -2.5; // Target EV of short exposure image //-2
 	double dfTopEVBound = 0.2; // Long exposure image should be at least "dfTopEVBound" EV or would be discarded (2 frame case)
 //  MBOOL bGainEnable = MTRUE; // True: Enable long exposure image to increase sensor gain; False: Disable
     MBOOL bGain0EVLimit = MFALSE;  // True: Limit the gain of 0EV and short exposure image; False: Keep it
@@ -522,8 +522,8 @@ MVOID  refineCaptureISPRAWGain(MUINT32 u4SensorGain, MUINT32& u4RAWGain_R, MUINT
 #if 1  //if MT6515 demo phone,please enable it, if not ,please disable.
 		XLOGD("[refineCaptureISPRAWGain] u4SensorGain=%d, u4RAWGain_R=%d, u4RAWGain_Gr=%d, u4RAWGain_Gb=%d, u4RAWGain_B=%d\n",
 			  u4SensorGain, u4RAWGain_R, u4RAWGain_Gr, u4RAWGain_Gb, u4RAWGain_B);
-		u4RAWGain_R = (u4RAWGain_R * 1003 + 512)>>10;   
-		u4RAWGain_B = (u4RAWGain_B * 999 + 512)>>10;	 
+		u4RAWGain_R = (u4RAWGain_R * 1000 + 512)>>10;   
+		u4RAWGain_B = (u4RAWGain_B * 1024 + 512)>>10;	 
     XLOGD("[refineCaptureISPRAWGain] u4SensorGain=%d, u4RAWGain_R=%d, u4RAWGain_Gr=%d, u4RAWGain_Gb=%d, u4RAWGain_B=%d\n",
           u4SensorGain, u4RAWGain_R, u4RAWGain_Gr, u4RAWGain_Gb, u4RAWGain_B);
 #endif

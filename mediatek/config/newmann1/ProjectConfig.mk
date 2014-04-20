@@ -301,6 +301,7 @@ MTK_BICR_SUPPORT=yes
 # Define MTK branch(internal use only)
 MTK_BRANCH=MAIN2.1
 
+#DC Newman N1 end main features
 # Enable Brazil operator common requirements
 MTK_BRAZIL_CUSTOMIZATION=no
 
@@ -1130,6 +1131,6 @@ MTK_WLAN_SUPPORT=yes
 MTK_TABLET_PLATFORM=no
 MTK_75DISPLAY_ENHANCEMENT_SUPPORT=no
 MTK_RMVB_PLAYBACK_SUPPORT=no
-#MTK_BATTARY_NTC_ID=yes
 MTK_BATTARY_NTC_ID=no
 MTK_8M_CAM=yes
+
