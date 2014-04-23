@@ -370,7 +370,7 @@ int do_settimeofday(const struct timespec *tv)
 	struct timespec ts_delta;
 	unsigned long flags;
 
-	if ((unsigned long)tv->tv_nsec >= NSEC_PER_SEC)
+	if (!timespec_valid_strict(tv))
 		return -EINVAL;
 
 	write_seqlock_irqsave(&timekeeper.lock, flags);
@@ -405,6 +405,8 @@ EXPORT_SYMBOL(do_settimeofday);
 int timekeeping_inject_offset(struct timespec *ts)
 {
 	unsigned long flags;
+	struct timespec tmp;
+	int ret = 0;
 
 	if ((unsigned long)ts->tv_nsec >= NSEC_PER_SEC)
 		return -EINVAL;
@@ -413,10 +415,17 @@ int timekeeping_inject_offset(struct timespec *ts)
 
 	timekeeping_forward_now();
 
+	tmp = timespec_add(timekeeper.xtime,  *ts);
+	if (!timespec_valid_strict(&tmp)) {
+		ret = -EINVAL;
+		goto error;
+	}
+
 	timekeeper.xtime = timespec_add(timekeeper.xtime, *ts);
 	timekeeper.wall_to_monotonic =
 				timespec_sub(timekeeper.wall_to_monotonic, *ts);
 
+error: /* even if we error out, we forwarded the time, so call update */
 	timekeeping_update(true);
 
 	write_sequnlock_irqrestore(&timekeeper.lock, flags);
@@ -424,7 +433,7 @@ int timekeeping_inject_offset(struct timespec *ts)
 	/* signal hrtimers about time change */
 	clock_was_set();
 
-	return 0;
+	return ret;
 }
 EXPORT_SYMBOL(timekeeping_inject_offset);
 
@@ -584,7 +593,20 @@ void __init timekeeping_init(void)
 	struct timespec now, boot;
 
 	read_persistent_clock(&now);
+	if (!timespec_valid_strict(&now)) {
+		pr_warn("WARNING: Persistent clock returned invalid value!\n"
+			"         Check your CMOS/BIOS settings.\n");
+		now.tv_sec = 0;
+		now.tv_nsec = 0;
+	}
+
 	read_boot_clock(&boot);
+	if (!timespec_valid_strict(&boot)) {
+		pr_warn("WARNING: Boot clock returned invalid value!\n"
+			"         Check your CMOS/BIOS settings.\n");
+		boot.tv_sec = 0;
+		boot.tv_nsec = 0;
+	}
 
 	seqlock_init(&timekeeper.lock);
 
@@ -623,7 +645,7 @@ static struct timespec timekeeping_suspend_time;
  */
 static void __timekeeping_inject_sleeptime(struct timespec *delta)
 {
-	if (!timespec_valid(delta)) {
+	if (!timespec_valid_strict(delta)) {
 		printk(KERN_WARNING "__timekeeping_inject_sleeptime: Invalid "
 					"sleep delta value!\n");
 		return;
@@ -681,22 +703,67 @@ void timekeeping_inject_sleeptime(struct timespec *delta)
  */
 static void timekeeping_resume(void)
 {
+	struct timekeeper *tk = &timekeeper;
+	struct clocksource *clock = tk->clock;
 	unsigned long flags;
-	struct timespec ts;
+	struct timespec ts_new, ts_delta;
+	cycle_t cycle_now, cycle_delta;
+	bool suspendtime_found = false;
 
-	read_persistent_clock(&ts);
+	read_persistent_clock(&ts_new);
 
 	clocksource_resume();
 
 	write_seqlock_irqsave(&timekeeper.lock, flags);
 
-	if (timespec_compare(&ts, &timekeeping_suspend_time) > 0) {
-		ts = timespec_sub(ts, timekeeping_suspend_time);
-		__timekeeping_inject_sleeptime(&ts);
+	/*
+	 * After system resumes, we need to calculate the suspended time and
+	 * compensate it for the OS time. There are 3 sources that could be
+	 * used: Nonstop clocksource during suspend, persistent clock and rtc
+	 * device.
+	 *
+	 * One specific platform may have 1 or 2 or all of them, and the
+	 * preference will be:
+	 *	suspend-nonstop clocksource -> persistent clock -> rtc
+	 * The less preferred source will only be tried if there is no better
+	 * usable source. The rtc part is handled separately in rtc core code.
+	 */
+	cycle_now = clock->read(clock);
+	if ((clock->flags & CLOCK_SOURCE_SUSPEND_NONSTOP) &&
+		cycle_now > clock->cycle_last) {
+		u64 num, max = ULLONG_MAX;
+		u32 mult = clock->mult;
+		u32 shift = clock->shift;
+		s64 nsec = 0;
+
+		cycle_delta = (cycle_now - clock->cycle_last) & clock->mask;
+
+		/*
+		 * "cycle_delta * mutl" may cause 64 bits overflow, if the
+		 * suspended time is too long. In that case we need do the
+		 * 64 bits math carefully
+		 */
+		do_div(max, mult);
+		if (cycle_delta > max) {
+			num = div64_u64(cycle_delta, max);
+			nsec = (((u64) max * mult) >> shift) * num;
+			cycle_delta -= num * max;
+		}
+		nsec += ((u64) cycle_delta * mult) >> shift;
+
+		ts_delta = ns_to_timespec(nsec);
+		suspendtime_found = true;
+	} else if (timespec_compare(&ts_new, &timekeeping_suspend_time) > 0) {
+		ts_delta = timespec_sub(ts_new, timekeeping_suspend_time);
+		suspendtime_found = true;
 	}
-	/* re-base the last cycle value */
-	timekeeper.clock->cycle_last = timekeeper.clock->read(timekeeper.clock);
-	timekeeper.ntp_error = 0;
+
+	if (suspendtime_found)
+		__timekeeping_inject_sleeptime(&ts_delta);
+
+	/* Re-base the last cycle value */
+	clock->cycle_last = cycle_now;
+	tk->ntp_error = 0;
 	timekeeping_suspended = 0;
 	write_sequnlock_irqrestore(&timekeeper.lock, flags);
 
@@ -964,7 +1031,6 @@ static cycle_t logarithmic_accumulation(cycle_t offset, int shift)
 		timekeeper.xtime.tv_sec++;
 		leap = second_overflow(timekeeper.xtime.tv_sec);
 		timekeeper.xtime.tv_sec += leap;
-		timekeeper.wall_to_monotonic.tv_sec -= leap;
 	}
 
 	/* Accumulate raw time */
@@ -1011,9 +1077,12 @@ static void update_wall_time(void)
 #else
 	offset = (clock->read(clock) - clock->cycle_last) & clock->mask;
 #endif
+	/* Check if there's really nothing to do */
+	if (offset < timekeeper.cycle_interval)
+		goto out;
+
 	timekeeper.xtime_nsec = (s64)timekeeper.xtime.tv_nsec <<
 						timekeeper.shift;
-
 	/*
 	 * With NO_HZ we may have to accumulate many cycle_intervals
 	 * (think "ticks") worth of time at once. To do this efficiently,
@@ -1080,7 +1149,6 @@ static void update_wall_time(void)
 		timekeeper.xtime.tv_sec++;
 		leap = second_overflow(timekeeper.xtime.tv_sec);
 		timekeeper.xtime.tv_sec += leap;
-		timekeeper.wall_to_monotonic.tv_sec -= leap;
 	}
 
 	timekeeping_update(false);
@@ -1278,3 +1346,4 @@ void xtime_update(unsigned long ticks)
 	do_timer(ticks);
 	write_sequnlock(&xtime_lock);
 }
+
