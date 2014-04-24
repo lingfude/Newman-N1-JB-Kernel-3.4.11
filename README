@@ -1,6 +1,6 @@
-===========================================================
-= Jelly Bean (3.4.5) kernel source code for the Newman N1 =
-===========================================================
+===================================================
+= 3.4.5 kernel source code for Newman N1 (MT6577) =
+===================================================
 
 In order to get kernel compilation working, make sure you follow one of these steps:
 
@@ -16,7 +16,8 @@ Option one:
   That is the interface you will use to build device kernel.
 
 - Run script with command "./build.sh newmann1" to begin with the build process.
-  Once finished, you will find the new zImage file in the kernel root folder (./kernelFile).
+  Once finished, you will find the new kernel file in root folder ./build_result/kernelFile.
+  This folder (./build_result) include all compiled modules (.ko)
 
 - To perform a clean build run command "./build.sh clean newmann1".
 
@@ -38,4 +39,4 @@ Option two:
 
 Common for both options:
 - Get original boot.img for device and unpack it.
-- Repack boot.img using original ramdisk from boot.img and the new generated kernel (kernelFile or zImagePatched).
+- Repack new boot.img using original ramdisk (from stock boot.img) and new generated kernel (kernelFile or zImagePatched).
