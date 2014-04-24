@@ -123,8 +123,7 @@ CUSTOM_KERNEL_SUB_BACKUP_LENS=dummy_lens
 
 
 # M-sensor hal layer library including daemon
-#david CUSTOM_HAL_MSENSORLIB=mmc328x akm8975 ami304 yamaha530 mag3110 akmd8963
-CUSTOM_HAL_MSENSORLIB=mmc328x akm8975
+CUSTOM_HAL_MSENSORLIB=mmc328x akm8975 ami304 yamaha530 mag3110 akmd8963
 
 # Sensor hal layer common part
 CUSTOM_HAL_SENSORS=sensor
