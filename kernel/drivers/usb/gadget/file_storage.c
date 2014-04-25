@@ -1581,7 +1581,7 @@ static int do_inquiry(struct fsg_dev *fsg, struct fsg_buffhd *bh)
 {
 	u8	*buf = (u8 *) bh->buf;
 
-	static char vendor_id[] = "bq   ";
+	static char vendor_id[] = "Newman   ";
 	static char product_disk_id[] = "File-Stor Gadget";
 	static char product_cdrom_id[] = "Newman N1  ";
 
