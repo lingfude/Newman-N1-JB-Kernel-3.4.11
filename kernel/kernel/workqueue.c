@@ -976,50 +976,6 @@ static bool is_chained_work(struct workqueue_struct *wq)
 	return false;
 }
 
-#ifdef CONFIG_MT_ENG_BUILD
-char *ignlist[]=
-{
-	"flush_to_ldisc",
-	"do_dbs_timer",
-	"MISRWrapper",
-	"hwmsen_work_func",
-	"cfq_kick_queue",
-	"vmstat_update",
-	"_mtm_update_sysinfo",
-	NULL,
-};
-
-static int ign_check(char *func)
-{
-	int i;
-	for (i=0; ignlist[i]; i++)
-	{
-		if(!strncmp(func,ignlist[i],sizeof(ignlist[i])))
-			return 1;
-	}
-	return 0;
-}
-
-static void mttrace_workqueue_activate_work(struct work_struct *work)
-{
-	char func[128];
-	sprintf(func, "%pf", work->func);
-
-	if (!ign_check(func))
-		printk(KERN_DEBUG "activate work=%p\n", work);
-}
-
-static void mttrace_workqueue_queue_work(unsigned int req_cpu, struct cpu_workqueue_struct *cwq,
-		 struct work_struct *work)
-{
-	char func[128];
-	sprintf(func, "%pf", work->func);
-	if (!ign_check(func))
-		printk(KERN_DEBUG "queue work=%p function=%pf workqueue=%p req_cpu=%u cpu=%u\n",
-			  work, work->func, cwq->wq, req_cpu, cwq->gcwq->cpu);
-}
-#endif //CONFIG_MT_ENG_BUILD
-
 static void __queue_work(unsigned int cpu, struct workqueue_struct *wq,
 			 struct work_struct *work)
 {
@@ -1076,10 +1032,6 @@ static void __queue_work(unsigned int cpu, struct workqueue_struct *wq,
 	cwq = get_cwq(gcwq->cpu, wq);
 	trace_workqueue_queue_work(cpu, cwq, work);
 
-#ifdef CONFIG_MT_ENG_BUILD
-	mttrace_workqueue_queue_work(cpu, cwq, work);
-#endif
-
 	BUG_ON(!list_empty(&work->entry));
 
 	cwq->nr_in_flight[cwq->work_color]++;
@@ -1087,9 +1039,6 @@ static void __queue_work(unsigned int cpu, struct workqueue_struct *wq,
 
 	if (likely(cwq->nr_active < cwq->max_active)) {
 		trace_workqueue_activate_work(work);
-#ifdef CONFIG_MT_ENG_BUILD
-		mttrace_workqueue_activate_work(work);
-#endif
 		cwq->nr_active++;
 		worklist = gcwq_determine_ins_pos(gcwq, cwq);
 	} else {
@@ -1265,8 +1214,13 @@ static void worker_enter_idle(struct worker *worker)
 	} else
 		wake_up_all(&gcwq->trustee_wait);
 
-	/* sanity check nr_running */
-	WARN_ON_ONCE(gcwq->nr_workers == gcwq->nr_idle &&
+	/*
+	 * Sanity check nr_running.  Because trustee releases gcwq->lock
+	 * between setting %WORKER_ROGUE and zapping nr_running, the
+	 * warning may trigger spuriously.  Check iff trustee is idle.
+	 */
+	WARN_ON_ONCE(gcwq->trustee_state == TRUSTEE_DONE &&
+		     gcwq->nr_workers == gcwq->nr_idle &&
 		     atomic_read(get_gcwq_nr_running(gcwq->cpu)));
 }
 
@@ -1778,10 +1732,6 @@ static void cwq_activate_first_delayed(struct cpu_workqueue_struct *cwq)
 	struct list_head *pos = gcwq_determine_ins_pos(cwq->gcwq, cwq);
 
 	trace_workqueue_activate_work(work);
-#ifdef CONFIG_MT_ENG_BUILD
-	mttrace_workqueue_activate_work(work);
-#endif
-
 	move_linked_works(work, pos, NULL);
 	__clear_bit(WORK_STRUCT_DELAYED_BIT, work_data_bits(work));
 	cwq->nr_active++;
@@ -1923,9 +1873,7 @@ __acquires(&gcwq->lock)
 
 	spin_unlock_irq(&gcwq->lock);
 
-	smp_wmb();	/* paired with test_and_set_bit(PENDING) */
 	work_clear_pending(work);
-
 	lock_map_acquire_read(&cwq->wq->lockdep_map);
 	lock_map_acquire(&lockdep_map);
 	trace_workqueue_execute_start(work);
@@ -1947,15 +1895,6 @@ __acquires(&gcwq->lock)
 		debug_show_held_locks(current);
 		dump_stack();
 	}
-
-	/*
-	 * The following prevents a kworker from hogging CPU on !PREEMPT
-	 * kernels, where a requeueing work item waiting for something to
-	 * happen could deadlock with stop_machine as such work item could
-	 * indefinitely requeue itself while all other CPUs are trapped in
-	 * stop_machine.
-	 */
-	cond_resched();
 
 	spin_lock_irq(&gcwq->lock);
 
@@ -3503,17 +3442,14 @@ static int __cpuinit trustee_thread(void *__gcwq)
 
 	for_each_busy_worker(worker, i, pos, gcwq) {
 		struct work_struct *rebind_work = &worker->rebind_work;
-		unsigned long worker_flags = worker->flags;
 
 		/*
 		 * Rebind_work may race with future cpu hotplug
 		 * operations.  Use a separate flag to mark that
-		 * rebinding is scheduled.  The morphing should
-		 * be atomic.
+		 * rebinding is scheduled.
 		 */
-		worker_flags |= WORKER_REBIND;
-		worker_flags &= ~WORKER_ROGUE;
-		ACCESS_ONCE(worker->flags) = worker_flags;
+		worker->flags |= WORKER_REBIND;
+		worker->flags &= ~WORKER_ROGUE;
 
 		/* queue rebind_work, wq doesn't matter, use the default one */
 		if (test_and_set_bit(WORK_STRUCT_PENDING_BIT,
@@ -3655,55 +3591,21 @@ static int __devinit workqueue_cpu_callback(struct notifier_block *nfb,
 	return notifier_from_errno(0);
 }
 
-/*
- * Workqueues should be brought up before normal priority CPU notifiers.
- * This will be registered high priority CPU notifier.
- */
-static int __devinit workqueue_cpu_up_callback(struct notifier_block *nfb,
-					       unsigned long action,
-					       void *hcpu)
-{
-	switch (action & ~CPU_TASKS_FROZEN) {
-	case CPU_UP_PREPARE:
-	case CPU_UP_CANCELED:
-	case CPU_DOWN_FAILED:
-	case CPU_ONLINE:
-		return workqueue_cpu_callback(nfb, action, hcpu);
-	}
-	return NOTIFY_OK;
-}
-
-/*
- * Workqueues should be brought down after normal priority CPU notifiers.
- * This will be registered as low priority CPU notifier.
- */
-static int __devinit workqueue_cpu_down_callback(struct notifier_block *nfb,
-						 unsigned long action,
-						 void *hcpu)
-{
-	switch (action & ~CPU_TASKS_FROZEN) {
-	case CPU_DOWN_PREPARE:
-	case CPU_DYING:
-	case CPU_POST_DEAD:
-		return workqueue_cpu_callback(nfb, action, hcpu);
-	}
-	return NOTIFY_OK;
-}
-
 #ifdef CONFIG_SMP
 
 struct work_for_cpu {
-	struct work_struct work;
+	struct completion completion;
 	long (*fn)(void *);
 	void *arg;
 	long ret;
 };
 
-static void work_for_cpu_fn(struct work_struct *work)
+static int do_work_for_cpu(void *_wfc)
 {
-	struct work_for_cpu *wfc = container_of(work, struct work_for_cpu, work);
-
+	struct work_for_cpu *wfc = _wfc;
 	wfc->ret = wfc->fn(wfc->arg);
+	complete(&wfc->completion);
+	return 0;
 }
 
 /**
@@ -3718,11 +3620,19 @@ static void work_for_cpu_fn(struct work_struct *work)
  */
 long work_on_cpu(unsigned int cpu, long (*fn)(void *), void *arg)
 {
-	struct work_for_cpu wfc = { .fn = fn, .arg = arg };
+	struct task_struct *sub_thread;
+	struct work_for_cpu wfc = {
+		.completion = COMPLETION_INITIALIZER_ONSTACK(wfc.completion),
+		.fn = fn,
+		.arg = arg,
+	};
 
-	INIT_WORK_ONSTACK(&wfc.work, work_for_cpu_fn);
-	schedule_work_on(cpu, &wfc.work);
-	flush_work(&wfc.work);
+	sub_thread = kthread_create(do_work_for_cpu, &wfc, "work_for_cpu");
+	if (IS_ERR(sub_thread))
+		return PTR_ERR(sub_thread);
+	kthread_bind(sub_thread, cpu);
+	wake_up_process(sub_thread);
+	wait_for_completion(&wfc.completion);
 	return wfc.ret;
 }
 EXPORT_SYMBOL_GPL(work_on_cpu);
@@ -3875,8 +3785,7 @@ static int __init init_workqueues(void)
 	unsigned int cpu;
 	int i;
 
-	cpu_notifier(workqueue_cpu_up_callback, CPU_PRI_WORKQUEUE_UP);
-	cpu_notifier(workqueue_cpu_down_callback, CPU_PRI_WORKQUEUE_DOWN);
+	cpu_notifier(workqueue_cpu_callback, CPU_PRI_WORKQUEUE);
 
 	/* initialize gcwqs */
 	for_each_gcwq_cpu(cpu) {
@@ -3933,4 +3842,3 @@ static int __init init_workqueues(void)
 	return 0;
 }
 early_initcall(init_workqueues);
-
