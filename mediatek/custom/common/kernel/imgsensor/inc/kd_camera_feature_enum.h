@@ -104,10 +104,10 @@ FID_TO_TYPE_ENUM  (
         AE_EV_COMP_15,                        // EV compensate 1.5
         AE_EV_COMP_17,                        // EV compensate 1.7
         AE_EV_COMP_20,                        // EV compensate 2.0
-        AE_EV_COMP_23,						  // EV compensate 2.3
-        AE_EV_COMP_25,						  // EV compensate 2.5
-        AE_EV_COMP_27,						  // EV compensate 2.7
-        AE_EV_COMP_30,						  // EV compensate 3.0        
+        AE_EV_COMP_23,			      // EV compensate 2.3
+        AE_EV_COMP_25,                        // EV compensate 2.5
+        AE_EV_COMP_27,                        // EV compensate 2.7
+        AE_EV_COMP_30,                        // EV compensate 3.0        
         AE_EV_COMP_n03,                       // EV compensate -0.3    
         AE_EV_COMP_n05,                       // EV compensate -0.5
         AE_EV_COMP_n07,                       // EV compensate -0.7
@@ -116,10 +116,10 @@ FID_TO_TYPE_ENUM  (
         AE_EV_COMP_n15,                       // EV compensate -1.5
         AE_EV_COMP_n17,                       // EV compensate -1.7
         AE_EV_COMP_n20,                       // EV compensate -2.0
-        AE_EV_COMP_n23, 					  // EV compensate -2.3    
-        AE_EV_COMP_n25, 					  // EV compensate -2.5
-        AE_EV_COMP_n27, 					  // EV compensate -2.7
-        AE_EV_COMP_n30, 					  // EV compensate -3.0        
+        AE_EV_COMP_n23,                       // EV compensate -2.3    
+        AE_EV_COMP_n25,                       // EV compensate -2.5
+        AE_EV_COMP_n27,                       // EV compensate -2.7
+        AE_EV_COMP_n30,                       // EV compensate -3.0        
         AE_EV_COMP_TOTAL_NUM
     )
 ) AE_EVCOMP_T;

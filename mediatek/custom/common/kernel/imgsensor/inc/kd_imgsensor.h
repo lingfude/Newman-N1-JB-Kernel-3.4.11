@@ -59,8 +59,8 @@
 #define MC501CB_SENSOR_ID                       0x0062
 #define MC501CC_SENSOR_ID                       0x0074
 #define MC501CA_SENSOR_ID                       0x0011
-//#define HI542_SENSOR_ID                         0x00B1
-#define HI542MIPI_SENSOR_ID                         0x00B1
+//#define HI542_SENSOR_ID                       0x00B1
+#define HI542MIPI_SENSOR_ID                     0x00B1
 
 #define MT9D011_SENSOR_ID                       0x1511
 #define MT9D111_SENSOR_ID                       0x1511
@@ -69,8 +69,8 @@
 #define MT9M111_SENSOR_ID                       0x143A
 #define MT9M112_SENSOR_ID                       0x148C
 #define MT9M113_SENSOR_ID                       0x2480
-#define MT9P012_SENSOR_ID						0x2800
-#define MT9P012_SENSOR_ID_REV7					0x2801
+#define MT9P012_SENSOR_ID			0x2800
+#define MT9P012_SENSOR_ID_REV7			0x2801
 #define MT9T012_SENSOR_ID                       0x1600
 #define MT9T013_SENSOR_ID                       0x2600
 #define MT9T113_SENSOR_ID                       0x4680
@@ -84,7 +84,7 @@
 #define NOON200PC51_SENSOR_ID                   0x006C
 #define NOON130PC51_SENSOR_ID                   0x0076
 
-#define HM3451_SENSOR_ID						0x3451
+#define HM3451_SENSOR_ID			0x3451
 
 #define OV2630_SENSOR_ID                        0x2633
 #define OV2640_SENSOR_ID                        0x2642
@@ -98,15 +98,15 @@
 #define OV9655_SENSOR_ID                        0x9657
 #define OV9660_SENSOR_ID                        0x9663
 #define OV3647_SENSOR_ID                        0x364A
-#define OV2655_SENSOR_ID					    0x2656
-#define OV2659_SENSOR_ID					    0x2656
+#define OV2655_SENSOR_ID			0x2656
+#define OV2659_SENSOR_ID			0x2656
 #define OV2650_SENSOR_ID_1                      0x2651
 #define OV2650_SENSOR_ID_2                      0x2652
-#define OV2650_SENSOR_ID_3			            0x2655
-#define OV5642_SENSOR_ID            0x5642
+#define OV2650_SENSOR_ID_3			0x2655
+#define OV5642_SENSOR_ID            		0x5642
 #define OV5650_SENSOR_ID                        0x5651
 #define OV5650MIPI_SENSOR_ID                    0x5651
-#define OV8825_SENSOR_ID            			0x8825
+#define OV8825_SENSOR_ID            		0x8825
 #define OV9665_SENSOR_ID                        0x9663
 #define OV5630_SENSOR_ID                        0x5634
 #define OV7675_SENSOR_ID                        0x7673
@@ -138,12 +138,12 @@
 #define S5K3E2FX_SENSOR_ID                      0x3E2F
 #define S5K4E1GA_SENSOR_ID                      0x4E10
 #define S5K5CAGX_SENSOR_ID                      0x05ca
-#define S5K4ECGX_SENSOR_ID                        0x4EC0
+#define S5K4ECGX_SENSOR_ID                      0x4EC0
 #define S5K3H2YX_SENSOR_ID                      0x382b
 //zhaoshaopeng add
 #define S5K4E1FX_SENSOR_ID                      0x4E10
 //zhaoshaopeng add
-#define S5K5CAGXMIPI_SENSOR_ID                      0x05ca
+#define S5K5CAGXMIPI_SENSOR_ID                  0x05ca
 //end
 #define PAS105_SENSOR_ID                        0x0065
 #define PAS302_SENSOR_ID                        0x0064
@@ -163,27 +163,27 @@
 #define HIVICF_SENSOR_ID                        0x0081
 #define HI253_SENSOR_ID                         0x0092
 #define HI704_SENSOR_ID                         0x0096
-#define GC2035_SENSOR_ID						0x2035
+#define GC2035_SENSOR_ID			0x2035
 
 
 #define IMX058_SENSOR_ID                        0x0058
 #define IMX073_SENSOR_ID                        0x0046
 #define SIV120B_SENSOR_ID                       0x0012
-#define MT9V113_SENSOR_ID                         0x2280
-#define MT9V114_SENSOR_ID                         0x2283
-#define MT9V115_SENSOR_ID						  0x2284
+#define MT9V113_SENSOR_ID                       0x2280
+#define MT9V114_SENSOR_ID                       0x2283
+#define MT9V115_SENSOR_ID			0x2284
 #define MT9P015_SENSOR_ID                       0x2803
 #define MT9P017_SENSOR_ID                       0x4800
-#define MT9P017MIPI_SENSOR_ID                       0x4800
+#define MT9P017MIPI_SENSOR_ID                   0x4800
 #define SHARP3D_SENSOR_ID                       0x003d
-#define MT9T113MIPI_SENSOR_ID                       0x4680
-#define OV7692_SENSOR_ID            0x7692
+#define MT9T113MIPI_SENSOR_ID                   0x4680
+#define OV7692_SENSOR_ID            		0x7692
 #define OV7690_SENSOR_ID                        0x7691
-#define OV5647MIPI_SENSOR_ID                        0x5647
-#define OV5647AMIPI_SENSOR_ID                        0x5648
+#define OV5647MIPI_SENSOR_ID                    0x5647
+#define OV5647AMIPI_SENSOR_ID                   0x5648
 #define IMX105_SENSOR_ID                        0x0105
-#define OV8830_SENSOR_ID			  0x8830
-#define OV9726_SENSOR_ID                          0x9726
+#define OV8830_SENSOR_ID			0x8830
+#define OV9726_SENSOR_ID                        0x9726
 #define A5141MIPI_SENSOR_ID                     0x4800
 
 /* CAMERA DRIVER NAME */

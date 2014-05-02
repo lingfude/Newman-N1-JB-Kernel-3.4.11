@@ -1265,14 +1265,14 @@ static kal_uint32 OV7690_YUVSensorSetting(FEATURE_ID iCmd, UINT16 iPara)
 			{
 
 			//SENSORDB("OV7690_NightMode = FALSE \n");
-			    OV7690_NightMode(FALSE); 
+			    OV7690_NightMode(TRUE); 
 			}
 			else if (iPara == SCENE_MODE_NIGHTSCENE)
 			{
 				//SENSORDB("OV7690_NightMode = TRUE \n");
 			    OV7690_NightMode(TRUE); 
 			}	    
-		    break; 
+		break; 
 		case FID_AWB_MODE:
 			OV7690_set_param_wb(iPara);
 		break;
