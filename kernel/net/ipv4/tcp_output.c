@@ -2878,4 +2878,3 @@ void tcp_send_probe0(struct sock *sk)
 					  TCP_RTO_MAX);
 	}
 }
-
