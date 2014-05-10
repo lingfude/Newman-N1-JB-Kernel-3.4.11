@@ -4,7 +4,7 @@
 MTK_BRANCH=ALPS.JB.MP
 	# Depend on branch
 
-#MTK_BUILD_VERNO=2.0.3 20140304-10:17
+MTK_BUILD_VERNO=1.1 20140508-22:42
 	# Depend on release week
 
 MTK_WEEK_NO= 
