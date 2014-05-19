@@ -69,11 +69,11 @@
 #include <linux/semaphore.h>
 
 #if defined(MT6577)
-#include <mach/mt_typedefs.h>
+#include <mach/mt6577_typedefs.h>
 #elif defined(MT6575) 
-#include <mach/mt_typedefs.h>
+#include <mach/mt6575_typedefs.h>
 #elif defined(MT6573)
-#include <mach/mt_typedefs.h>
+#include <mach/mt6573_typedefs.h>
 #else
 #include <mach/mt_typedefs.h>
 #endif

@@ -154,8 +154,10 @@
 #endif
 
 #if defined(MTK_MT5192) || defined(MTK_MT5193)
+#if (HAVE_MATV_FEATURE)
 extern int cust_matv_gpio_on(void);
 extern int cust_matv_gpio_off(void);
+#endif
 #endif
 
 /*****************************************************************************
@@ -3484,16 +3486,20 @@ static long AudDrv_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
       case AUDDRV_ENABLE_ATV_I2S_GPIO:
 	  {
 #if defined(MTK_MT5192) || defined(MTK_MT5193)
+#if (HAVE_MATV_FEATURE)
 	     xlog_printk(ANDROID_LOG_INFO, "Sound","!! AudDrv, AUDDRV_ENABLE_ATV_I2S_GPIO \n");
 	     cust_matv_gpio_on();
+#endif
 #endif
 	     break;
 	  }
 	  case AUDDRV_DISABLE_ATV_I2S_GPIO:
 	  {
 #if defined(MTK_MT5192) || defined(MTK_MT5193)
+#if (HAVE_MATV_FEATURE)
 	     xlog_printk(ANDROID_LOG_INFO, "Sound","!! AudDrv, AUDDRV_DISABLE_ATV_I2S_GPIO \n");
 	     cust_matv_gpio_off();
+#endif	     
 #endif
 	     break;
 	  }
