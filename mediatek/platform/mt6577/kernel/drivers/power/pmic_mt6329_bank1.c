@@ -1491,7 +1491,7 @@ static int pmic_thread_kthread(void *x)
                 if(led_switch)
                 {
                     xlog_printk(ANDROID_LOG_INFO, "Power/PMIC", "[pmic_thread_kthread] Power On NLed Battery Level = %d\r\n", bat_volt_check_point);
-                    if(bat_volt_check_point >= 90)    //Full ARGB
+                    if(bat_volt_check_point >= 100)    //Full ARGB
                     {
             #if defined(CONFIG_MTK_LEDS)
                         mt65xx_leds_brightness_set(MT65XX_LED_TYPE_RED, LED_OFF);
