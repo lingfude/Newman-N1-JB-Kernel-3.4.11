@@ -11,10 +11,33 @@
 
 extern int mtkfb_set_backlight_level(unsigned int level);
 extern int mtkfb_set_backlight_pwm(int div);
-
+#define ERROR_BL_LEVEL 0xFFFFFFFF
+#if 0
 unsigned int brightness_mapping(unsigned int level)
 {
-    return level/42;	//	level/17 for 16 level
+    unsigned int mapped_level;
+    
+    mapped_level = level;
+       
+	return mapped_level;
+}
+#else
+unsigned int brightness_mapping(unsigned int level)
+{
+	if(level>=75 && level<=255) { // user changable by using Setting->Display->Brightness
+		return (level-39)/36;
+	}
+	else if(level>0 && level<75) { // used to fade out for 7 seconds before shut down backlight
+		return 0;
+	}
+	return ERROR_BL_LEVEL;
+}
+#endif
+unsigned int Cust_SetBacklight(int level, int div)
+{
+    mtkfb_set_backlight_pwm(div);
+    mtkfb_set_backlight_level(brightness_mapping(level));
+    return 0;
 }
 
 static struct cust_mt65xx_led cust_led_list[MT65XX_LED_TYPE_TOTAL] = {
