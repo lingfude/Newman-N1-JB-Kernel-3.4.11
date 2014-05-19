@@ -133,6 +133,7 @@ CUSTOM_KERNEL_ACCELEROMETER=mma8452q_auto lis33dh_auto kxtf9_auto
 
 # ALSPS sensor driver to detect ambient light and the object is close or far away from device
 CUSTOM_KERNEL_ALSPS=stk31xx_auto tmd2771_auto
+
 MTK_AUTO_DETECT_ALSPS=yes
 
 # The battery feature is the MUST include feature and can not be disable. This feature provides battery monitor and charging. The system can not boot up without battery.
@@ -1130,6 +1131,6 @@ MTK_WLAN_SUPPORT=yes
 MTK_TABLET_PLATFORM=no
 MTK_75DISPLAY_ENHANCEMENT_SUPPORT=no
 MTK_RMVB_PLAYBACK_SUPPORT=no
-MTK_BATTARY_NTC_ID=no
+MTK_BATTARY_NTC_ID=yes
 MTK_8M_CAM=yes
 

@@ -87,9 +87,11 @@ VBAT_TO_PERCENT Batt_VoltToPercent_Table[] = {
 //#define TBAT_OVER_CRITICAL_LOW   483954
 #define TBAT_OVER_CRITICAL_LOW     124607
 #define BAT_TEMP_PROTECT_ENABLE    1
-#define BAT_NTC_10 		   1
-//#define BAT_NTC_47 0
-//#define BAT_NTC_TSM_1
+
+//#define BAT_NTC_TSM_1	  	    // uncomment to define
+//#define BAT_NTC_10_SEN_1	    // uncomment to define
+//#define BAT_NTC_10		   1 // 1:ON , 0:OFF
+#define BAT_NTC_47		   1 // 1:ON , 0:OFF
 
 /* Battery Notify */
 #define BATTERY_NOTIFY_CASE_0001
