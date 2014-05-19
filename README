@@ -16,8 +16,9 @@ Option one:
   That is the interface you will use to build device kernel.
 
 - Run script with command "./build.sh newmann1" to begin with the build process.
-  Once finished, you will find the new kernel file in root folder ./build_result/kernelFile.
-  This folder (./build_result) include all compiled modules (.ko)
+  Once finished, you will find:
+  - the new kernel file in root folder ./build_result/kernel/kernel
+  - the compiled modules in root folder ./build_result/modules/*.ko
 
 - To perform a clean build run command "./build.sh clean newmann1".
 
