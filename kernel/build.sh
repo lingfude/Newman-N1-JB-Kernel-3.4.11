@@ -9,6 +9,7 @@ makeflags="-w -j8"
 makedefs="V=0"
 makejobs=${MAKEJOBS}
 curdir=`pwd`
+TOOLCHAIN="./toolchain/arm-cortex_a9-linux-gnueabihf-linaro_4.7.4-2014.04/bin"
 #if [ "${KBUILD_OUTPUT_SUPPORT}" == "yes" ];then
 #  outdir=$curdir/out
 #  mkdir -p $outdir
@@ -22,6 +23,11 @@ usage() {
 
 make_clean() {
     echo "**** Cleaning ****"
+    if [ "$(ls -A ../build_result/kernel/)" ] || [ "$(ls -A ../build_result/modules/)" ]; then
+        echo "**** Cleaning 'build_result' files ****"
+        rm ../build_result/kernel/*
+        rm ../build_result/modules/*
+    fi
     nice make ${makeflags} ${makedefs} distclean
 }
 
@@ -194,7 +200,7 @@ done
 
 echo "**** Patching all built modules (.ko) in /build_result/modules/ ****"
 cd ..
-find ./build_result/modules/ -type f -name '*.ko' | xargs -n 1 ./toolchain/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-strip --strip-unneeded
+find ./build_result/modules/ -type f -name '*.ko' | xargs -n 1 $TOOLCHAIN/arm-gnueabi-strip --strip-unneeded
 echo "**** Finnish ****"
 
 echo "**** You can find kernelFile in root folder: /build_result/kernel/ ****"
