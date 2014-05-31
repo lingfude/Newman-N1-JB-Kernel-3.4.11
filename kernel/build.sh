@@ -9,7 +9,7 @@ makeflags="-w -j8"
 makedefs="V=0"
 makejobs=${MAKEJOBS}
 curdir=`pwd`
-TOOLCHAIN="./toolchain/arm-cortex_a9-linux-gnueabihf-linaro_4.7.4-2014.04/bin"
+TOOLCHAIN="./toolchain/Arm_A9_linaro_4.8.3/bin"
 #if [ "${KBUILD_OUTPUT_SUPPORT}" == "yes" ];then
 #  outdir=$curdir/out
 #  mkdir -p $outdir
