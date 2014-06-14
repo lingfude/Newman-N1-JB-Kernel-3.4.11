@@ -575,13 +575,7 @@ static u32 msdc_sd1_power(u32 on, MT65XX_POWER_VOLTAGE powerVolt)
 	   else
 	   	  hwPowerDown_fpga();
 #else
-
-#if defined(TINNO_PROJECT_S9070)
-    msdc_ldo_power(on, MT65XX_POWER_LDO_VGP2, powerVolt, &g_vgp);
-#else
     msdc_ldo_power(on, MT65XX_POWER_LDO_VGP, powerVolt, &g_vgp);
-#endif
-
 #ifdef HW_LAYOUT_EVB
 #ifndef MTK_EMMC_SUPPORT
     msdc_ldo_power(on, MT65XX_POWER_LDO_VMC, powerVolt, &g_vmc);
@@ -595,12 +589,7 @@ static u32 msdc_sd1_power(u32 on, MT65XX_POWER_VOLTAGE powerVolt)
 
 static u32 msdc_sd1_power_switch(u32 on, MT65XX_POWER_VOLTAGE powerVolt)
 {
-#if defined(TINNO_PROJECT_S9070)
-    msdc_ldo_power(on, MT65XX_POWER_LDO_VGP2, powerVolt, &g_vgp);
-#else
     msdc_ldo_power(on, MT65XX_POWER_LDO_VGP, powerVolt, &g_vgp);
-#endif
-
 #ifdef HW_LAYOUT_EVB
 #ifndef MTK_EMMC_SUPPORT
     msdc_ldo_power(on, MT65XX_POWER_LDO_VMC, powerVolt, &g_vmc);
