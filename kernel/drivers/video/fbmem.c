@@ -1428,7 +1428,6 @@ fb_mmap(struct file *file, struct vm_area_struct * vma)
     vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
     fb_pgprotect(file, vma, start);
     
-    return vm_iomap_memory(vma, start, len);
 }
 
 static int
