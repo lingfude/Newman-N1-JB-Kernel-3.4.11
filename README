@@ -1,6 +1,6 @@
-===================================================
-= 3.4.5 kernel source code for Newman N1 (MT6577) =
-===================================================
+====================================================
+= 3.4.11 kernel source code for Newman N1 (MT6577) =
+====================================================
 
 In order to get kernel compilation working, make sure you follow one of these steps:
 
@@ -27,5 +27,7 @@ In order to get kernel compilation working, make sure you follow one of these st
   -- Get stock boot.img for device and unpack it.
   -- Repack the stock ramdisk (from stock boot.img) with the new generated kernel file.
 
+
+Visit the official thread at XDA: http://forum.xda-developers.com/showthread.php?t=2735894
 
 Enjoy!
