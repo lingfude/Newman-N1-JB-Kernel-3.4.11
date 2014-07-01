@@ -198,7 +198,7 @@ export KBUILD_BUILDHOST := $(SUBARCH)
 #ARCH		?= $(SUBARCH)
 #CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
 ARCH		?= arm
-CROSS_COMPILE	?= ../toolchain/arm-cortex_a9-linux-gnueabihf-linaro_4.9.1-2014.05/bin/arm-eabi-
+CROSS_COMPILE	?= ../toolchain/arm-cortex_a9-linux-gnueabihf-linaro_4.9.1-2014.06/bin/arm-eabi-
 #CROSS_COMPILE	?= ../toolchain/Arm_A9_linaro_4.8.3/bin/arm-gnueabi-
 #CROSS_COMPILE	?= ../toolchain/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-
 
